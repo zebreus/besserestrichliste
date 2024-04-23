@@ -2,16 +2,15 @@
 	import 'uno.css';
 	import '@unocss/reset/tailwind.css';
 	import Header from './Header.svelte';
+	import Footer from './Footer.svelte';
 </script>
 
-<div class="app">
+<div class="bg-neutral-900 text-neutral-50 min-h-screen flex flex-col">
 	<Header />
 
 	<main>
 		<slot />
 	</main>
 
-	<footer>
-		<p>visit <a href="https://kit.svelte.dev">kit.svelte.dev</a> to learn SvelteKit</p>
-	</footer>
+	<Footer />
 </div>

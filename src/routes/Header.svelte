@@ -2,9 +2,9 @@
 	import { page } from '$app/stores';
 </script>
 
-<header>
-	<nav>
-		<ul>
+<header class="bg-neutral-800 p-4">
+	<nav class="container mx-auto">
+		<ul class="flex gap-4">
 			<li aria-current={$page.url.pathname === '/' ? 'page' : undefined}>
 				<a href="/">Home</a>
 			</li>

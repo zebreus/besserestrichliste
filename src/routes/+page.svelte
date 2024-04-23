@@ -1,8 +1,6 @@
 <script lang="ts">
-	import welcome from '$lib/images/svelte-welcome.webp';
-	import welcome_fallback from '$lib/images/svelte-welcome.png';
-	import UserCard from '$lib/components/UserCard.svelte';
-	import type { User } from '@prisma/client';
+	import Container from '$lib/components/Container.svelte';
+import UserCard from '$lib/components/UserCard.svelte';
 	import type { PageServerData } from './$types';
 
 	export let data: PageServerData;
@@ -14,14 +12,14 @@
 </svelte:head>
 
 <section>
-	<h1>Users overview</h1>
-	<main>
-		<ul>
+	<Container>
+		<h1 class="text-2xl font-bold mb-4">Nutzerübersicht</h1>
+		<ul class="grid grid-cols-5 gap-4">
 			{#each data.users as user (user.id)}
-				<li>
+				<li class="bg-neutral-800 border-gray-700 border-1">
 					<UserCard {user} />
 				</li>
 			{/each}
 		</ul>
-	</main>
+	</Container>
 </section>
