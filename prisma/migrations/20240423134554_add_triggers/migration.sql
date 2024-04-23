@@ -1,4 +1,4 @@
--- This is an empty migration.
+-- Creates triggers to update the balance of the users to always reflect the correct balance after a transaction is inserted, deleted, or modified.
 
 create trigger UpdateBalanceOfUserOnInsertedTransaction after insert on `Transaction` begin 
     update User set balance = balance + new.amount where new.recipientId = id;
