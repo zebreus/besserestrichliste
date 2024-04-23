@@ -1,29 +1,147 @@
 // prisma/seed.ts
 
 import { PrismaClient } from '@prisma/client';
-import userData from '../src/lib/data.json' assert { type: 'json' };
 
 const prisma = new PrismaClient();
 
 async function main() {
 	console.log(`Start seeding ...`);
 
-	for (const p of userData) {
-		const user = await prisma.user.create({
-			data: {
-				name: p.author.name,
-				email: p.author.email,
-				posts: {
-					create: {
-						title: p.title,
-						content: p.content,
-						published: p.published
-					}
-				}
-			}
-		});
-		console.log(`Created user with id: ${user.id}`);
-	}
+	// The matekasse user is used to transfer money to other users when they put cash into the matekasse
+	const matekasse = await prisma.user.create({
+		data: {
+			id: 0,
+			name: 'Matekasse',
+			internal: true,
+		}
+	});
+
+	const zebreus = await prisma.user.create({
+		data: {
+			name: 'Zerberos',
+		}
+	});
+	const avocadoom = await prisma.user.create({
+		data: {
+			name: 'Avocadome',
+		}
+	});
+	const hexa = await prisma.user.create({
+		data: {
+			name: 'Hexagon',
+		}
+	});
+	const braack = await prisma.user.create({
+		data: {
+			name: 'Brack',
+		}
+	});
+	const fleaz = await prisma.user.create({
+		data: {
+			name: 'Fließ!',
+		}
+	});
+	const andi = await prisma.user.create({
+		data: {
+			name: 'andi-r',
+		}
+	});
+	const hxr = await prisma.user.create({
+		data: {
+			name: 'hxr418',
+		}
+	});
+
+	await prisma.transaction.create({
+		data: {
+			amount: -1000,
+			title: '',
+			type: 'cash',
+			initiatorId: zebreus.id,
+			recipientId: matekasse.id,
+		}
+	});
+	await prisma.transaction.create({
+		data: {
+			amount: 130,
+			title: '',
+			type: 'sale',
+			initiatorId: zebreus.id,
+			recipientId: matekasse.id,
+		}
+	});
+	await prisma.transaction.create({
+		data: {
+			amount: 130,
+			title: '',
+			type: 'sale',
+			initiatorId: zebreus.id,
+			recipientId: matekasse.id,
+		}
+	});
+	await prisma.transaction.create({
+		data: {
+			amount: 50,
+			title: '',
+			type: 'sale',
+			initiatorId: hxr.id,
+			recipientId: matekasse.id,
+		}
+	});
+	await prisma.transaction.create({
+		data: {
+			amount: -2000,
+			title: '',
+			type: 'cash',
+			initiatorId: avocadoom.id,
+			recipientId: matekasse.id,
+		}
+	});
+	await prisma.transaction.create({
+		data: {
+			amount: 450,
+			title: 'Pizza',
+			type: 'cash',
+			initiatorId: avocadoom.id,
+			recipientId: matekasse.id,
+		}
+	});
+	await prisma.transaction.create({
+		data: {
+			amount: 50,
+			title: '',
+			type: 'transfer',
+			initiatorId: hexa.id,
+			recipientId: avocadoom.id,
+		}
+	});
+	await prisma.transaction.create({
+		data: {
+			amount: 50,
+			title: '',
+			type: 'transfer',
+			initiatorId: andi.id,
+			recipientId: avocadoom.id,
+		}
+	});
+	await prisma.transaction.create({
+		data: {
+			amount: 50,
+			title: '',
+			type: 'transfer',
+			initiatorId: fleaz.id,
+			recipientId: avocadoom.id,
+		}
+	});
+	await prisma.transaction.create({
+		data: {
+			amount: 50,
+			title: '',
+			type: 'transfer',
+			initiatorId: braack.id,
+			recipientId: avocadoom.id,
+		}
+	});
 	console.log(`Seeding finished.`);
 }
 

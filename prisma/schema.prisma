@@ -10,20 +10,35 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Post {
-  id        Int      @id @default(autoincrement())
-  title     String
-  content   String?
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  published Boolean  @default(false)
-  author    User?    @relation(fields: [authorId], references: [id])
-  authorId  Int?
+model Transaction {
+  id          Int      @id @default(autoincrement())
+  // Short description of the transaction. Empty string if there is no description. No longer than XXX characters.
+  title       String
+  // Freetext describing the type of this transaction. Should be mostly enum-like values. like "charge", "sale", "transfer" or something like that
+  type        String
+  // When the transaction was processed
+  processedAt DateTime @default(now())
+  // The Amount of cents transferred from the initiator to the recipient. Negative values reflect money transferred from the recipient to the initiator.
+  amount      Int
+  // The user that is reponsible for triggering this transaction
+  initiator   User?    @relation(name: "InitiatorTransactions", fields: [initiatorId], references: [id])
+  initiatorId Int?
+  // The other involved user
+  recipient   User?    @relation(name: "RecipientTransactions", fields: [recipientId], references: [id])
+  recipientId Int?
 }
 
 model User {
-  id    Int     @id @default(autoincrement())
-  email String  @unique
-  name  String?
-  posts Post[]
+  id          Int           @id @default(autoincrement())
+  // Name of the user for display purposes
+  name        String
+  // Whether this user is internal. Internal users will be hidden from the overview
+  internal    Boolean       @default(false)
+  // The balance of the user in cents. Should get automatically updated when transactions are processed
+  balance     Int           @default(0)
+  createdAt   DateTime      @default(now())
+  // The transactions that this user initiated
+  initiatorIn Transaction[] @relation(name: "InitiatorTransactions")
+  // The transactions that this user received
+  recipientIn Transaction[] @relation(name: "RecipientTransactions")
 }
