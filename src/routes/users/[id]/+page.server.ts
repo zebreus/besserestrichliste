@@ -1,5 +1,5 @@
 import prisma from "$lib/prisma";
-import type { PageServerLoad } from './$types';
+import type { PageServerLoad, Actions } from './$types';
 
 // 1.
 export const load: PageServerLoad = (async ({ params: { id } }) => {
@@ -16,3 +16,48 @@ export const load: PageServerLoad = (async ({ params: { id } }) => {
     // 3.
     return { user };
 });
+
+export const actions: Actions = {
+    deposit: async ({ request, params }) => {
+        const formData = await request.formData();
+        const initiatorId = Number(params.id);
+        const amount = formData.get("amount");
+
+        const initiator = await prisma.user.findUniqueOrThrow({
+            where: { id: Number(initiatorId) },
+        })
+
+        await prisma.transaction.create({
+            data: {
+                amount: - Number(amount),
+                title: "UI Transaction",
+                type: "transfer",
+                recipient: { connect: { id: 0 } },
+                initiator: {
+                    connect: initiator
+                }
+            }
+        })
+    },
+    withdraw: async ({ request, params }) => {
+        const formData = await request.formData();
+        const initiatorId = Number(params.id);
+        const amount = formData.get("amount");
+
+        const initiator = await prisma.user.findUniqueOrThrow({
+            where: { id: Number(initiatorId) },
+        })
+
+        await prisma.transaction.create({
+            data: {
+                amount: Number(amount),
+                title: "UI Transaction",
+                type: "transfer",
+                recipient: { connect: { id: 0 } },
+                initiator: {
+                    connect: initiator
+                }
+            }
+        })
+    }
+};
