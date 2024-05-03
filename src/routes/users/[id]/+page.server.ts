@@ -86,6 +86,15 @@ export const actions: Actions = {
                 initiator: { connect: initiator }
             }
         })
+    },
+    edit: async ({ request, params }) => {
+        const formData = await request.formData();
+        const userId = Number(params.id);
+        const name = formData.get("name");
 
+        await prisma.user.update({
+            where: { id: Number(userId) },
+            data: { name: "" + name }
+        })
     }
 };
