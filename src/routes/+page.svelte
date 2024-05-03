@@ -2,6 +2,7 @@
 	import Container from '$lib/components/Container.svelte';
 import UserCard from '$lib/components/UserCard.svelte';
 	import type { PageServerData } from './$types';
+	import '@fontsource/atkinson-hyperlegible';
 
 	export let data: PageServerData;
 </script>

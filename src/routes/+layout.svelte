@@ -8,7 +8,7 @@
 <div class="bg-neutral-900 text-neutral-50 min-h-screen flex flex-col">
 	<Header />
 
-	<main>
+	<main class="flex-1">
 		<slot />
 	</main>
 

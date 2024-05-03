@@ -5,4 +5,9 @@ export default defineConfig({
   presets: [
     presetUno(),
   ],
+  theme: {
+    fontFamily: {
+      sans: ['Atkinson Hyperlegible', 'sans-serif']
+    },
+  },
 })

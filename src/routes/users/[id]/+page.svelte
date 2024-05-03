@@ -1,15 +1,20 @@
 <script lang="ts">
 	import Container from '$lib/components/Container.svelte';
+	import TransactionTable from '$lib/components/users/TransactionTable.svelte';
 	import type { PageServerData } from './$types';
 
 	export let data: PageServerData;
 </script>
 
 <div>
-	<div class="bg-neutral-700 p-2 text-xl font-bold">
+	<div class="bg-neutral-700 text-xl font-bold">
 		<Container class="flex-1 flex justify-between">
-			<h1>{data.user.name}</h1>
-			<span>
+			<h1 class="p-2">{data.user.name}</h1>
+			<span
+				class="p-2"
+				class:bg-green-950={data.user.balance >= 0}
+				class:bg-red-950={data.user.balance < 0}
+			>
 				Balance: {new Intl.NumberFormat(undefined, { style: 'currency', currency: 'EUR' }).format(
 					data.user.balance / 100
 				)}
@@ -17,37 +22,9 @@
 		</Container>
 	</div>
 	<main>
-		<figure>
-			<figcaption>Initiated transactions</figcaption>
-			<ul>
-				{#each data.user.initiatorIn as transaction (transaction.id)}
-					<li>
-						<span
-							>{new Intl.NumberFormat(undefined, { style: 'currency', currency: 'EUR' }).format(
-								transaction.amount / 100
-							)}</span
-						>
-						<span>{transaction.processedAt.toDateString()}</span>
-						<span>To {transaction.recipientId}</span>
-					</li>
-				{/each}
-			</ul>
-		</figure>
-		<figure>
-			<figcaption>Received transactions</figcaption>
-			<ul>
-				{#each data.user.recipientIn as transaction (transaction.id)}
-					<li>
-						<span
-							>{new Intl.NumberFormat(undefined, { style: 'currency', currency: 'EUR' }).format(
-								transaction.amount / 100
-							)}</span
-						>
-						<span>{transaction.processedAt.toDateString()}</span>
-						<span>From {transaction.initiatorId}</span>
-					</li>
-				{/each}
-			</ul>
-		</figure>
+		<Container class="grid lg:grid-cols-2 my-4	gap-4">
+			<TransactionTable transacitons={data.user.initiatorIn} title="Initiated transactions" />
+			<TransactionTable transacitons={data.user.recipientIn} title="Received transactions" />
+		</Container>
 	</main>
 </div>

@@ -41,6 +41,7 @@
 		"seed": "tsx prisma/seed.ts"
 	},
 	"dependencies": {
+		"@fontsource/atkinson-hyperlegible": "^5.0.20",
 		"@prisma/client": "^5.12.1",
 		"@unocss/extractor-svelte": "^0.59.4",
 		"@unocss/reset": "^0.59.4"
