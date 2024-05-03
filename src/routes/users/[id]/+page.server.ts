@@ -1,19 +1,16 @@
 import prisma from "$lib/prisma";
 import type { PageServerLoad, Actions } from './$types';
 
-// 1.
 export const load: PageServerLoad = (async ({ params: { id } }) => {
-    // 2.
     const user = await prisma.user.findUnique({
         where: { id: Number(id) },
         include: { initiatorIn: true, recipientIn: true },
     });
     if (!user) {
-        //TODO: This is not the correct way to handle any error here 
+        //TODO: Thisis not the correct way to handle any error here 
         throw new Error("User not found")
     }
 
-    // 3.
     return { user };
 });
 
@@ -31,7 +28,7 @@ export const actions: Actions = {
             data: {
                 amount: - Number(amount),
                 title: "UI Transaction",
-                type: "transfer",
+                type: "deposit",
                 recipient: { connect: { id: 0 } },
                 initiator: {
                     connect: initiator

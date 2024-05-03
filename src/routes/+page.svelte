@@ -1,6 +1,6 @@
 <script lang="ts">
 	import Container from '$lib/components/Container.svelte';
-import UserCard from '$lib/components/UserCard.svelte';
+	import UserCard from '$lib/components/UserCard.svelte';
 	import type { PageServerData } from './$types';
 	import '@fontsource/atkinson-hyperlegible';
 
@@ -23,4 +23,11 @@ import UserCard from '$lib/components/UserCard.svelte';
 			{/each}
 		</ul>
 	</Container>
+	<form method="POST" action="?/createUser">
+		<label>
+			Username
+			<input name="name" type="text" />
+		</label>
+		<button type="submit">Create User</button>
+	</form>
 </section>
