@@ -11,6 +11,28 @@
 		<Container class="flex-1 flex justify-between">
 			<h1 class="p-2">{data.user.name}</h1>
 
+			<form method="POST" action="?/transfer">
+				<label>
+					Amount
+					<input name="amount" type="number" />
+				</label>
+				<label>
+					Reason
+					<input name="reason" type="text" />
+				</label>
+				<label>
+					Recipient
+					<input list="recipients" name="recipient" id="recipient" />
+					<datalist id="recipients">
+						{#each data.otherUsers as user (user.id)}
+							<option value={user.name}> </option>
+						{/each}
+					</datalist>
+				</label>
+
+				<button>Send</button>
+			</form>
+
 			<form method="POST" action="?/deposit">
 				<button name="amount" value="30">+0.30€</button>
 				<button name="amount" value="50">+0.50€</button>

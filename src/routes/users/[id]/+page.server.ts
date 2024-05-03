@@ -11,7 +11,12 @@ export const load: PageServerLoad = (async ({ params: { id } }) => {
         throw new Error("User not found")
     }
 
-    return { user };
+    const otherUsers = await prisma.user.findMany({
+        select: { id: true, name: true },
+        where: { NOT: { id: Number(id) } }
+    })
+
+    return { user, otherUsers };
 });
 
 export const actions: Actions = {
@@ -56,5 +61,31 @@ export const actions: Actions = {
                 }
             }
         })
+    },
+    transfer: async ({ request, params }) => {
+        const formData = await request.formData();
+        const initiatorId = Number(params.id);
+        const amount = formData.get("amount");
+        const recipientName = formData.get("recipient");
+        const reason = formData.get("reason");
+
+        const initiator = await prisma.user.findUniqueOrThrow({
+            where: { id: Number(initiatorId) },
+        })
+        // TODO: Figure out how to use ids in the frontend
+        const recipient = await prisma.user.findFirstOrThrow({
+            where: { name: "" + recipientName },
+        })
+
+        await prisma.transaction.create({
+            data: {
+                amount: Number(amount),
+                title: ("" + reason) || "",
+                type: "transfer",
+                recipient: { connect: recipient },
+                initiator: { connect: initiator }
+            }
+        })
+
     }
 };
