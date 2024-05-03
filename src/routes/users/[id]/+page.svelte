@@ -58,7 +58,7 @@
 
 	<div>
 		<h2>Deposit/Withdraw money</h2>
-		<form method="POST" action="?/deposit">
+		<form method="POST" action="?/withdraw">
 			<button name="amount" value="30">+0.30€</button>
 			<button name="amount" value="50">+0.50€</button>
 			<button name="amount" value="100">+1.00€</button>
@@ -99,14 +99,24 @@
 			<form method="POST" class="bg-neutral-800 p-4 gap-4 flex flex-col justify-between">
 				<label class="flex flex-col justify-center items-center gap-4">
 					<span class="font-bold text-xl">Amount</span>
-					<input class="p-2  text-xl bg-neutral-950 text-white border-2 text-white" name="amount" type="number" />
+					<input
+						class="p-2 text-xl bg-neutral-950 text-white border-2 text-white"
+						name="amount"
+						type="number"
+					/>
 				</label>
 				<div class="flex justify-center gap-8">
-					<button class="p-4 border-green bg-green-950 text-lg font-bold border-3" formaction="?/deposit">Deposit</button>
-					<button class="p-4 border-red bg-red-950 text-lg font-bold border-3" formaction="?/withdraw">Withdraw</button>	
+					<button
+						class="p-4 border-green bg-green-950 text-lg font-bold border-3"
+						formaction="?/deposit">Deposit</button
+					>
+					<button
+						class="p-4 border-red bg-red-950 text-lg font-bold border-3"
+						formaction="?/withdraw">Withdraw</button
+					>
 				</div>
 			</form>
-			<form method="POST" action="?/deposit" class="grid grid-cols-3 gap-2">
+			<form method="POST" action="?/withdraw" class="grid grid-cols-3 gap-2">
 				<PriceButton amount={30} type="withdraw" />
 				<PriceButton amount={50} type="withdraw" />
 				<PriceButton amount={100} type="withdraw" />
