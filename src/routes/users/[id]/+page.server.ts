@@ -36,7 +36,7 @@ export const actions: Actions = {
                 type: "deposit",
                 recipient: { connect: { id: 0 } },
                 initiator: {
-                    connect: initiator
+                    connect: { id: initiator.id }
                 }
             }
         })
@@ -57,7 +57,7 @@ export const actions: Actions = {
                 type: "transfer",
                 recipient: { connect: { id: 0 } },
                 initiator: {
-                    connect: initiator
+                    connect: { id: initiator.id }
                 }
             }
         })
@@ -82,8 +82,8 @@ export const actions: Actions = {
                 amount: Number(amount),
                 title: ("" + reason) || "",
                 type: "transfer",
-                recipient: { connect: recipient },
-                initiator: { connect: initiator }
+                recipient: { connect: { id: recipient.id } },
+                initiator: { connect: { id: initiator.id } }
             }
         })
     },

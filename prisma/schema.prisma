@@ -37,6 +37,8 @@ model User {
   // The balance of the user in cents. Should get automatically updated when transactions are processed
   balance     Int           @default(0)
   createdAt   DateTime      @default(now())
+  // The date when the user was last active
+  lastActive  DateTime      @default(now())
   // The transactions that this user initiated
   initiatorIn Transaction[] @relation(name: "InitiatorTransactions")
   // The transactions that this user received

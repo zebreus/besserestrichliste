@@ -11,6 +11,7 @@
 	<div class="bg-neutral-700 text-xl font-bold">
 		<Container class="flex-1 flex justify-between">
 			<h1 class="p-2">{data.user.name}</h1>
+			<span>Last active at {data.user.lastActive.toString()}</span>
 			<span
 				class="p-2"
 				class:bg-green-950={data.user.balance >= 0}
