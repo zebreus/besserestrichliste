@@ -1,0 +1,37 @@
+# besserestrichliste
+
+// ## Configuration
+
+// besserestrichliste is for now configured by using environment variables.
+
+// HOST:: The host of the server. Default is `localhost`. 
+// PORT:: The port of the server. Default is `3000`.
+// ORIGIN:: The origin of the server. Default is `http://localhost:3000`.
+// DATABASE_FILE:: The path to the sqlite database file. Default is `/TODO/db.sqlite`.
+
+## Hosting besserestrichliste
+
+Add this repo as a flake input and import the besserestrichliste nixos module into your configuration. Then you can set `services.besserestrichliste.enable` to start the server.
+
+.Example nixos configuration using flakes
+[source,nix]
+----
+{
+  inputs = {
+    nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
+    besserestrichliste.url = "github:zebreus/besserestrichliste";
+  };
+
+  outputs = { self, nixpkgs, besserestrichliste }: {
+    nixosConfigurations.my-hostname = nixpkgs.lib.nixosSystem {
+      system = "x86_64-linux";
+      modules = [
+        besserestrichliste.nixosModules.default
+        {
+            services.besserestrichliste.enable = true;
+        }
+      ];
+    };
+  };
+}
+----

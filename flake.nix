@@ -62,6 +62,7 @@
           ];
           imports = [ ./module.nix ];
         };
+        nixosModules.default = nixosModules.besserestrichliste;
 
         # # VM for interactive testing of the module using nixos-shell
         # packages.nixosConfigurations = {
