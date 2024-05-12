@@ -29,73 +29,33 @@
 
                 src = ./.;
 
-                nativeBuildInputs = [ pkgs.sqlite pkgs.nodePackages.prisma pkgs.openssl ];
+                nativeBuildInputs = [ pkgs.makeWrapper ];
+                buildInputs = [ pkgs.openssl ];
 
-                npmDepsHash = "sha256-UXquaMSMlxqG/nug5m6VjzgJgVP6RYKtUF80WzOQO4o=";
+                npmDepsHash = "sha256-y17xUaVheYj7k7XMC+p3jtdejtad2yzL6VWA+Ja7TgA=";
                 npmFlags = [ "--legacy-peer-deps" ];
 
-                preBuild = ''
-                  export PRISMA_SCHEMA_ENGINE_BINARY="${pkgs.prisma-engines}/bin/schema-engine"
-                  export PRISMA_QUERY_ENGINE_BINARY="${pkgs.prisma-engines}/bin/query-engine"
-                  export PRISMA_QUERY_ENGINE_LIBRARY="${pkgs.prisma-engines}/lib/libquery_engine.node"
-                  export PRISMA_INTROSPECTION_ENGINE_BINARY="${pkgs.prisma-engines}/bin/introspection-engine"
-                  export PRISMA_FMT_BINARY="${pkgs.prisma-engines}/bin/prisma-fmt"
-                  export DATABASE_URL=file:dev.db
+                PRISMA_SCHEMA_ENGINE_BINARY = "${pkgs.prisma-engines}/bin/schema-engine";
+                PRISMA_QUERY_ENGINE_BINARY = "${pkgs.prisma-engines}/bin/query-engine";
+                PRISMA_QUERY_ENGINE_LIBRARY = "${pkgs.prisma-engines}/lib/libquery_engine.node";
+                PRISMA_FMT_BINARY = "${pkgs.prisma-engines}/bin/prisma-fmt";
 
-                  node_modules/.bin/prisma generate
-                '';
-
-                installPhase = ''
-                  mkdir -p $out
-                  cp -r node_modules build prisma static package.json package-lock.json $out
-                '';
+                makeWrapperArgs = [
+                  ''--set-default PRISMA_SCHEMA_ENGINE_BINARY "${pkgs.prisma-engines}/bin/schema-engine"''
+                  ''--set-default PRISMA_QUERY_ENGINE_BINARY "${pkgs.prisma-engines}/bin/query-engine"''
+                  ''--set-default PRISMA_QUERY_ENGINE_LIBRARY "${pkgs.prisma-engines}/lib/libquery_engine.node"''
+                  ''--set-default PRISMA_FMT_BINARY "${pkgs.prisma-engines}/bin/prisma-fmt"''
+                  ''--prefix PATH : ${pkgs.openssl}/bin'' # Prisma prints warnings if it cant find openssl
+                  ''--set-default DATABASE_URL "file:/tmp/dev.db"''
+                  ''--set-default HOST localhost''
+                  ''--set-default PORT 3000''
+                  ''--set-default ORIGIN http://localhost:3000''
+                  ''--run "cd $out/lib/node_modules/besserestrichliste && ${pkgs.nodejs}/bin/npm run migrate:prod ; cd -"''
+                ];
               };
 
-            packages.default = pkgs.callPackage
-              ({ pkgs
-               , databaseFile ? "/var/lib/besserestrichliste/besserestrichliste.db"
-               , host ? "localhost"
-               , port ? "3000"
-               , origin ? "http://localhost:3000"
-               , besserestrichliste ? packages.besserestrichliste
-               , ...
-               }: (pkgs.writeShellApplication
-                {
-                  name = "besserestrichliste-launcher";
-
-                  runtimeInputs = with pkgs; [ sqlite nodePackages.prisma openssl ];
-
-                  text = ''
-                    chmod +x
-                    export PRISMA_SCHEMA_ENGINE_BINARY="${pkgs.prisma-engines}/bin/schema-engine"
-                    export PRISMA_QUERY_ENGINE_BINARY="${pkgs.prisma-engines}/bin/query-engine"
-                    export PRISMA_QUERY_ENGINE_LIBRARY="${pkgs.prisma-engines}/lib/libquery_engine.node"
-                    export PRISMA_INTROSPECTION_ENGINE_BINARY="${pkgs.prisma-engines}/bin/introspection-engine"
-                    export PRISMA_FMT_BINARY="${pkgs.prisma-engines}/bin/prisma-fmt"
-
-                    export DATABASE_URL="file:${databaseFile}"
-                    export HOST='${host}'
-                    export PORT=${port}
-                    export ORIGIN=${origin}
-                    # export PROTOCOL_HEADER=x-forwarded-proto
-                    # export HOST_HEADER=x-forwarded-host
-
-                    DB_CREATE=$(test -f "${databaseFile}" && echo false || echo true)
-                    prisma migrate deploy
-                    if $DB_CREATE; then
-                      # Seed if the db was just created
-                      prisma db seed
-                    fi
-
-
-                    cd ${besserestrichliste}
-                    node build
-                  '';
-                }))
-              { };
-
             devShell = pkgs.mkShell {
-              buildInputs = [ pkgs.nodejs pkgs.sqlite pkgs.nodePackages.prisma pkgs.openssl ];
+              buildInputs = [ pkgs.nodejs pkgs.sqlite pkgs.openssl ];
               shellHook = with pkgs; ''
                 export PRISMA_SCHEMA_ENGINE_BINARY="${prisma-engines}/bin/schema-engine"
                 export PRISMA_QUERY_ENGINE_BINARY="${prisma-engines}/bin/query-engine"
@@ -103,9 +63,11 @@
                 export PRISMA_INTROSPECTION_ENGINE_BINARY="${prisma-engines}/bin/introspection-engine"
                 export PRISMA_FMT_BINARY="${prisma-engines}/bin/prisma-fmt"
                 export DATABASE_URL=file:dev.db
+
                 export PATH=$PATH:$PWD/node_modules/.bin
 
                 npm install
+                prisma generate
                 prisma migrate dev
               '';
             };
@@ -123,8 +85,6 @@
             #     ];
             #   };
             # };
-
-            # journalctl -exu besserestrichliste-init
 
             checks.opensPort = pkgs.nixosTest {
               name = "besserestrichliste-opens-port";
