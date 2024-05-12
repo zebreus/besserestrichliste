@@ -1,4 +1,4 @@
-{ buildNpmPackage, makeWrapper, openssl, prisma-engines, nodejs, bash, ... }:
+{ buildNpmPackage, makeWrapper, openssl, prisma-engines, nodejs, bash, lib, ... }:
 buildNpmPackage {
   pname = "besserestrichliste";
   version = "0.0.1";
@@ -10,7 +10,8 @@ buildNpmPackage {
   # Explicitly set the nodejs version because we use it directly in makeWrapperArgs
   inherit nodejs;
 
-  npmDepsHash = "sha256-y17xUaVheYj7k7XMC+p3jtdejtad2yzL6VWA+Ja7TgA=";
+  # npmDepsHash = "sha256-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=";
+  npmDepsHash = "sha256-UUDGattrUEHHzkT+5TQZwcDIngg1A5ejqs/RM4pALjs=";
   npmFlags = [ "--legacy-peer-deps" ];
 
   PRISMA_SCHEMA_ENGINE_BINARY = "${prisma-engines}/bin/schema-engine";
