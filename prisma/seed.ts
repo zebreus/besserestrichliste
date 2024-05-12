@@ -1,11 +1,36 @@
 // prisma/seed.ts
 
 import { PrismaClient } from '@prisma/client';
+import { parseArgs } from 'node:util'
+
 
 const prisma = new PrismaClient();
 
 async function main() {
-	console.log(`Start seeding ...`);
+	const {
+		values: { environment },
+	} = parseArgs({
+		options: { environment: { type: 'string' }, }
+	})
+
+	const isDevelopment = environment !== 'production';
+
+	console.log(`Start seeding ${isDevelopment ? "development data" : "minimal production database"}...`);
+
+	const previousUserZero = await prisma.user.findFirst({
+		where: {
+			id: 0,
+		}
+	});
+	if (previousUserZero) {
+		console.log(`Database is already seeded ...`);
+		return
+	}
+
+	if (!isDevelopment) {
+		console.log(`Seeding finished.`);
+		return
+	}
 
 	// The matekasse user is used to transfer money to other users when they put cash into the matekasse
 	const matekasse = await prisma.user.create({
