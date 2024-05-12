@@ -15,39 +15,41 @@
 		"migrate:prod": "prisma migrate deploy && prisma db seed -- --environment production"
 	},
 	"devDependencies": {
-		"@fontsource/fira-mono": "^4.5.10",
-		"@neoconfetti/svelte": "^1.0.0",
-		"@sveltejs/adapter-auto": "^3.0.0",
 		"@sveltejs/adapter-node": "^5.0.1",
-		"@sveltejs/kit": "^2.0.0",
-		"@sveltejs/vite-plugin-svelte": "^3.0.0",
-		"@types/eslint": "^8.56.0",
-		"@typescript-eslint/eslint-plugin": "^7.0.0",
-		"@typescript-eslint/parser": "^7.0.0",
-		"eslint": "^8.56.0",
+		"@sveltejs/kit": "^2.5.7",
+		"@sveltejs/vite-plugin-svelte": "^3.1.0",
+		"@types/eslint": "^8.56.10",
+		"@typescript-eslint/eslint-plugin": "^7.8.0",
+		"@typescript-eslint/parser": "^7.8.0",
+		"eslint": "^8.57.0",
 		"eslint-config-prettier": "^9.1.0",
-		"eslint-plugin-svelte": "^2.36.0-next.4",
-		"prettier": "^3.1.1",
-		"prettier-plugin-svelte": "^3.1.2",
-		"svelte": "^5.0.0-next.1",
-		"svelte-check": "^3.6.0",
+		"eslint-plugin-svelte": "^2.39.0",
+		"prettier": "^3.2.5",
+		"prettier-plugin-svelte": "^3.2.3",
+		"svelte": "^5.0.0-next.131",
+		"svelte-check": "^3.7.1",
 		"ts-node": "^10.9.2",
-		"tslib": "^2.4.1",
-		"typescript": "^5.0.0",
-		"unocss": "^0.59.4",
-		"vite": "^5.0.3",
-		"vitest": "^1.2.0"
+		"tslib": "^2.6.2",
+		"typescript": "^5.4.5",
+		"unocss": "^0.60.2",
+		"vite": "^5.2.11",
+		"vitest": "^1.6.0"
 	},
 	"prisma": {
 		"seed": "tsx prisma/seed.ts"
 	},
 	"dependencies": {
 		"@fontsource/atkinson-hyperlegible": "^5.0.20",
-		"@prisma/client": "^5.12.1",
-		"@unocss/extractor-svelte": "^0.59.4",
-		"@unocss/reset": "^0.59.4",
-		"tsx": "^4.7.2",
-		"prisma": "^5.12.1"
+		"@prisma/client": "^5.13.0",
+		"@unocss/extractor-svelte": "^0.60.2",
+		"@unocss/reset": "^0.60.2",
+		"prisma": "^5.13.0",
+		"tsx": "^4.10.1"
+	},
+	"overrides": {
+		"svelte-hmr": {
+			"svelte": "^5.0.0-next.131"
+		}
 	},
 	"type": "module",
 	"bin": "./build",
