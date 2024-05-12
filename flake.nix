@@ -71,6 +71,7 @@
         #       nixosModules.besserestrichliste
         #       ({ pkgs, ... }: {
         #         services.besserestrichliste.enable = true;
+        #         environment.systemPackages = with pkgs; [ git curl nmap besserestrichliste zsh coreutils inetutils moreutils bash ];
         #       })
         #     ];
         #   };

@@ -1,4 +1,4 @@
-{ buildNpmPackage, makeWrapper, openssl, prisma-engines, nodejs, ... }:
+{ buildNpmPackage, makeWrapper, openssl, prisma-engines, nodejs, bash, ... }:
 buildNpmPackage {
   pname = "besserestrichliste";
   version = "0.0.1";
@@ -24,11 +24,16 @@ buildNpmPackage {
     ''--set-default PRISMA_QUERY_ENGINE_LIBRARY "${prisma-engines}/lib/libquery_engine.node"''
     ''--set-default PRISMA_FMT_BINARY "${prisma-engines}/bin/prisma-fmt"''
     ''--prefix PATH : ${openssl}/bin'' # Prisma prints warnings if it cant find openssl
+    ''--prefix PATH : ${bash}/bin'' # Prisma prints warnings if it cant find openssl
     ''--set-default DATABASE_URL "file:/tmp/dev.db"''
     ''--set-default HOST localhost''
     ''--set-default PORT 3000''
     ''--set-default ORIGIN http://localhost:3000''
     ''--run "cd $out/lib/node_modules/besserestrichliste && ${nodejs}/bin/npm run migrate:prod ; cd -"''
   ];
+
+  meta = {
+    mainProgram = "besserestrichliste";
+  };
 }
 

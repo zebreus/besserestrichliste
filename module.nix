@@ -41,7 +41,7 @@ in
   config = lib.mkIf cfg.enable (
     let
       dataDirectory = "/var/lib/besserestrichliste";
-      databaseFile = "${dataDirectory}/besserestrichliste.db";
+      databaseFile = "${dataDirectory}/db.sqlite";
     in
     {
       users.users.besserestrichliste = {
@@ -52,35 +52,6 @@ in
       };
       users.groups.besserestrichliste = { };
 
-      systemd.services."besserestrichliste-init" = {
-        description = "make sure the besserestrichliste database exists and the schema is up to date";
-        serviceConfig = { Type = "oneshot"; };
-        environment = {
-          PRISMA_SCHEMA_ENGINE_BINARY = "${pkgs.prisma-engines}/bin/schema-engine";
-          PRISMA_QUERY_ENGINE_BINARY = "${pkgs.prisma-engines}/bin/query-engine";
-          PRISMA_QUERY_ENGINE_LIBRARY = "${pkgs.prisma-engines}/lib/libquery_engine.node";
-          PRISMA_INTROSPECTION_ENGINE_BINARY = "${pkgs.prisma-engines}/bin/introspection-engine";
-          PRISMA_FMT_BINARY = "${pkgs.prisma-engines}/bin/prisma-fmt";
-          DATABASE_URL = "file:${databaseFile}";
-        };
-        script = ''
-          ${lib.getExe (pkgs.writeShellApplication {
-            name = "besserestrichliste-init";
-            runtimeInputs = with pkgs; [  nodePackages.prisma  ];
-            text = ''
-              cd ${cfg.package}
-              export PATH="$PATH:${cfg.package}/node_modules/.bin"
-              DB_CREATE=$(test -f "${databaseFile}" && echo false || echo true)
-              prisma migrate deploy
-              if $DB_CREATE; then
-                # Seed if the db was just created
-                prisma db seed
-              fi
-            '';
-          })}
-        '';
-      };
-
       systemd.services."besserestrichliste" = {
         serviceConfig = {
           Type = "simple";
@@ -88,10 +59,9 @@ in
           Group = "besserestrichliste";
           Restart = "on-failure";
           RestartSec = "30s";
-          ExecStart = "${lib.getExe pkgs.nodejs} ${cfg.package}/build";
+          ExecStart = "${lib.getExe pkgs.besserestrichliste}";
         };
         wantedBy = [ "multi-user.target" ];
-        after = [ "besserestrichliste-init.service" ];
 
         description = "besserestrichliste UI and server";
 
