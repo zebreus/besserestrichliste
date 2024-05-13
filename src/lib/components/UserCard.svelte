@@ -3,9 +3,10 @@
 
 	export let user: User;
 	export let isPositive: boolean = user.balance > 0;
-	export let balance: string = new Intl.NumberFormat(undefined, { style: 'currency', currency: 'EUR' }).format(
-			user.balance / 100
-		);
+	export let balance: string = new Intl.NumberFormat(undefined, {
+		style: 'currency',
+		currency: 'EUR'
+	}).format(user.balance / 100);
 </script>
 
 <a href={`/users/${user.id}`} class="cursor-pointer flex flex-col">
@@ -13,7 +14,6 @@
 	<small
 		class="text-xl text-right p-2"
 		class:bg-green-950={isPositive}
-		class:bg-red-950={!isPositive}
-		>{balance}</small
+		class:bg-red-950={!isPositive}>{balance}</small
 	>
 </a>

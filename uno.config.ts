@@ -1,13 +1,11 @@
 // uno.config.ts
-import { defineConfig, presetUno } from 'unocss'
+import { defineConfig, presetUno } from 'unocss';
 
 export default defineConfig({
-  presets: [
-    presetUno(),
-  ],
-  theme: {
-    fontFamily: {
-      sans: ['Atkinson Hyperlegible', 'sans-serif']
-    },
-  },
-})
+	presets: [presetUno()],
+	theme: {
+		fontFamily: {
+			sans: ['Atkinson Hyperlegible', 'sans-serif']
+		}
+	}
+});

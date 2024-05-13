@@ -1,30 +1,31 @@
 // prisma/seed.ts
 
 import { PrismaClient } from '@prisma/client';
-import { parseArgs } from 'node:util'
-
+import { parseArgs } from 'node:util';
 
 const prisma = new PrismaClient();
 
 async function main() {
 	const {
-		values: { environment },
+		values: { environment }
 	} = parseArgs({
-		options: { environment: { type: 'string' }, }
-	})
+		options: { environment: { type: 'string' } }
+	});
 
 	const isDevelopment = environment !== 'production';
 
-	console.log(`Start seeding ${isDevelopment ? "development data" : "minimal production database"}...`);
+	console.log(
+		`Start seeding ${isDevelopment ? 'development data' : 'minimal production database'}...`
+	);
 
 	const previousUserZero = await prisma.user.findFirst({
 		where: {
-			id: 0,
+			id: 0
 		}
 	});
 	if (previousUserZero) {
 		console.log(`Database is already seeded ...`);
-		return
+		return;
 	}
 
 	// The matekasse user is used to transfer money to other users when they put cash into the matekasse
@@ -32,48 +33,48 @@ async function main() {
 		data: {
 			id: 0,
 			name: 'Matekasse',
-			internal: true,
+			internal: true
 		}
 	});
 
 	if (!isDevelopment) {
 		console.log(`Minimal production seeding finished.`);
-		return
+		return;
 	}
 
 	const zebreus = await prisma.user.create({
 		data: {
-			name: 'Zerberos',
+			name: 'Zerberos'
 		}
 	});
 	const avocadoom = await prisma.user.create({
 		data: {
-			name: 'Avocadome',
+			name: 'Avocadome'
 		}
 	});
 	const hexa = await prisma.user.create({
 		data: {
-			name: 'Hexagon',
+			name: 'Hexagon'
 		}
 	});
 	const braack = await prisma.user.create({
 		data: {
-			name: 'Brack',
+			name: 'Brack'
 		}
 	});
 	const fleaz = await prisma.user.create({
 		data: {
-			name: 'Fließ!',
+			name: 'Fließ!'
 		}
 	});
 	const andi = await prisma.user.create({
 		data: {
-			name: 'andi-r',
+			name: 'andi-r'
 		}
 	});
 	const hxr = await prisma.user.create({
 		data: {
-			name: 'hxr418',
+			name: 'hxr418'
 		}
 	});
 
@@ -83,7 +84,7 @@ async function main() {
 			title: '',
 			type: 'cash',
 			initiatorId: zebreus.id,
-			recipientId: matekasse.id,
+			recipientId: matekasse.id
 		}
 	});
 	await prisma.transaction.create({
@@ -92,7 +93,7 @@ async function main() {
 			title: '',
 			type: 'sale',
 			initiatorId: zebreus.id,
-			recipientId: matekasse.id,
+			recipientId: matekasse.id
 		}
 	});
 	await prisma.transaction.create({
@@ -101,7 +102,7 @@ async function main() {
 			title: '',
 			type: 'sale',
 			initiatorId: zebreus.id,
-			recipientId: matekasse.id,
+			recipientId: matekasse.id
 		}
 	});
 	await prisma.transaction.create({
@@ -110,7 +111,7 @@ async function main() {
 			title: '',
 			type: 'sale',
 			initiatorId: hxr.id,
-			recipientId: matekasse.id,
+			recipientId: matekasse.id
 		}
 	});
 	await prisma.transaction.create({
@@ -119,7 +120,7 @@ async function main() {
 			title: '',
 			type: 'cash',
 			initiatorId: avocadoom.id,
-			recipientId: matekasse.id,
+			recipientId: matekasse.id
 		}
 	});
 	await prisma.transaction.create({
@@ -128,7 +129,7 @@ async function main() {
 			title: 'Pizza',
 			type: 'cash',
 			initiatorId: avocadoom.id,
-			recipientId: matekasse.id,
+			recipientId: matekasse.id
 		}
 	});
 	await prisma.transaction.create({
@@ -137,7 +138,7 @@ async function main() {
 			title: '',
 			type: 'transfer',
 			initiatorId: hexa.id,
-			recipientId: avocadoom.id,
+			recipientId: avocadoom.id
 		}
 	});
 	await prisma.transaction.create({
@@ -146,7 +147,7 @@ async function main() {
 			title: '',
 			type: 'transfer',
 			initiatorId: andi.id,
-			recipientId: avocadoom.id,
+			recipientId: avocadoom.id
 		}
 	});
 	await prisma.transaction.create({
@@ -155,7 +156,7 @@ async function main() {
 			title: '',
 			type: 'transfer',
 			initiatorId: fleaz.id,
-			recipientId: avocadoom.id,
+			recipientId: avocadoom.id
 		}
 	});
 	await prisma.transaction.create({
@@ -164,7 +165,7 @@ async function main() {
 			title: '',
 			type: 'transfer',
 			initiatorId: braack.id,
-			recipientId: avocadoom.id,
+			recipientId: avocadoom.id
 		}
 	});
 	console.log(`Seeding finished.`);
