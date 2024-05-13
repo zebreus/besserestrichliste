@@ -35,3 +35,60 @@ Add this repo as a flake input and import the besserestrichliste nixos module in
   };
 }
 ----
+
+.Setup with nginx and ACME for https
+[source,nix]
+----
+{
+  inputs = {
+    nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
+    besserestrichliste.url = "github:zebreus/besserestrichliste";
+  };
+
+  outputs = { self, nixpkgs, besserestrichliste }: {
+    nixosConfigurations.my-hostname = nixpkgs.lib.nixosSystem {
+      system = "x86_64-linux";
+      modules = [
+        besserestrichliste.nixosModules.default
+        {
+          services.besserestrichliste = {
+            enable = true;
+            origin = "https://besserer.wirs.ing";
+          };
+        
+          networking.firewall = {
+            allowedTCPPorts = [ 80 443 ];
+          };
+        
+          # Get certs
+          security.acme = {
+            acceptTerms = true;
+            certs = {
+              "besserer.wirs.ing".email = "lennarteichhorn@gmail.com";
+            };
+          };
+        
+          services.nginx = {
+            enable = true;
+            # Only allow PFS-enabled ciphers with AES256
+            sslCiphers = "AES256+EECDH:AES256+EDH:!aNULL";
+            recommendedTlsSettings = true;
+            recommendedOptimisation = true;
+            recommendedGzipSettings = true;
+            recommendedProxySettings = true;
+            virtualHosts = {
+              "besserer.wirs.ing" = {
+                enableACME = true;
+                forceSSL = true;
+                locations = {
+                  "/".proxyPass = "http://[::1]:3000";
+                };
+              };
+            };
+          };
+        }
+      ];
+    };
+  };
+}
+----
