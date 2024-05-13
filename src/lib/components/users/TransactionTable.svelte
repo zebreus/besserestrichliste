@@ -1,5 +1,13 @@
 <script lang="ts">
-	export let transacitons: any;
+	export let transacitons: {
+		id: number;
+		title: string;
+		type: string;
+		processedAt: Date;
+		amount: number;
+		initiatorId: number | null;
+		recipientId: number | null;
+	}[];
 	export let title: string;
 </script>
 
