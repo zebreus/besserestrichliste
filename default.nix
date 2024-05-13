@@ -12,7 +12,6 @@ buildNpmPackage {
 
   # npmDepsHash = "sha256-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=";
   npmDepsHash = "sha256-UUDGattrUEHHzkT+5TQZwcDIngg1A5ejqs/RM4pALjs=";
-  npmFlags = [ "--legacy-peer-deps" ];
 
   PRISMA_SCHEMA_ENGINE_BINARY = "${prisma-engines}/bin/schema-engine";
   PRISMA_QUERY_ENGINE_BINARY = "${prisma-engines}/bin/query-engine";
