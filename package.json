@@ -12,7 +12,9 @@
 		"lint": "prettier --check . && eslint .",
 		"format": "prettier --write .",
 		"migrate": "prisma migrate dev && prisma db seed -- --environment development",
-		"migrate:prod": "prisma migrate deploy && prisma db seed -- --environment production"
+		"migrate:prod": "prisma migrate deploy && prisma db seed -- --environment production",
+		"prepare": "husky",
+		"lint-staged": "lint-staged"
 	},
 	"devDependencies": {
 		"@sveltejs/adapter-node": "^5.0.1",
@@ -24,6 +26,8 @@
 		"eslint": "^8.57.0",
 		"eslint-config-prettier": "^9.1.0",
 		"eslint-plugin-svelte": "^2.39.0",
+		"husky": "^9.0.11",
+		"lint-staged": "^15.2.2",
 		"prettier": "^3.2.5",
 		"prettier-plugin-svelte": "^3.2.3",
 		"svelte": "^5.0.0-next.131",
@@ -58,5 +62,13 @@
 		"build",
 		"prisma",
 		"static"
-	]
+	],
+	"lint-staged": {
+		"*.+(ts|mts|cts|js|mjs|cjs|svelte)": [
+			"eslint --fix"
+		],
+		"*": [
+			"prettier --write -u"
+		]
+	}
 }

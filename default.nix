@@ -11,7 +11,7 @@ buildNpmPackage {
   inherit nodejs;
 
   # npmDepsHash = "sha256-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=";
-  npmDepsHash = "sha256-UUDGattrUEHHzkT+5TQZwcDIngg1A5ejqs/RM4pALjs=";
+  npmDepsHash = "sha256-tRzY3HHeQrqE2PpKaQjjyxvL5BVFCUdjDuBeUXWdvzE=";
 
   PRISMA_SCHEMA_ENGINE_BINARY = "${prisma-engines}/bin/schema-engine";
   PRISMA_QUERY_ENGINE_BINARY = "${prisma-engines}/bin/query-engine";
