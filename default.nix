@@ -1,4 +1,4 @@
-{ buildNpmPackage, makeWrapper, openssl, prisma-engines, nodejs, bash, lib, ... }:
+{ buildNpmPackage, makeWrapper, openssl, prisma-engines, nodejs, bash, ... }:
 buildNpmPackage {
   pname = "besserestrichliste";
   version = "0.0.1";
