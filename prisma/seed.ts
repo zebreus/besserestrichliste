@@ -27,11 +27,6 @@ async function main() {
 		return
 	}
 
-	if (!isDevelopment) {
-		console.log(`Seeding finished.`);
-		return
-	}
-
 	// The matekasse user is used to transfer money to other users when they put cash into the matekasse
 	const matekasse = await prisma.user.create({
 		data: {
@@ -40,6 +35,11 @@ async function main() {
 			internal: true,
 		}
 	});
+
+	if (!isDevelopment) {
+		console.log(`Minimal production seeding finished.`);
+		return
+	}
 
 	const zebreus = await prisma.user.create({
 		data: {
