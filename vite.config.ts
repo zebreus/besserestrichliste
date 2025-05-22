@@ -11,6 +11,7 @@ export default defineConfig({
 		sveltekit()
 	],
 	test: {
-		include: ['src/**/*.{test,spec}.{js,ts}', 'prisma/**/*.{test,spec}.{js,ts}']
+		include: ['src/**/*.{test,spec}.{js,ts}', 'prisma/**/*.{test,spec}.{js,ts}'],
+		environment: 'jsdom'
 	}
 });
