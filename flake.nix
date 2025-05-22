@@ -51,6 +51,7 @@
             testScript = ''
               machine.wait_for_unit("besserestrichliste.service")
               machine.wait_for_open_port(3000)
+              machine.succeed("curl -f http://localhost:3000/")
             '';
           };
 
