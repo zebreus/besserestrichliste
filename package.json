@@ -37,7 +37,8 @@
 		"typescript": "^5.4.5",
 		"unocss": "^0.60.2",
 		"vite": "^5.2.11",
-		"vitest": "^1.6.0"
+		"vitest": "^1.6.0",
+		"jsdom": "^24.0.0"
 	},
 	"prisma": {
 		"seed": "tsx prisma/seed.ts"
