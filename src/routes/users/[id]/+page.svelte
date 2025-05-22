@@ -127,8 +127,8 @@
 			</form>
 		</Container>
 		<Container class="grid lg:grid-cols-2 my-4	gap-4">
-			<TransactionTable transacitons={data.user.initiatorIn} title="Initiated transactions" />
-			<TransactionTable transacitons={data.user.recipientIn} title="Received transactions" />
+			<TransactionTable transactions={data.user.initiatorIn} title="Initiated transactions" />
+			<TransactionTable transactions={data.user.recipientIn} title="Received transactions" />
 		</Container>
 	</main>
 </div>

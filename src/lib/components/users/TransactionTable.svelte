@@ -1,5 +1,5 @@
 <script lang="ts">
-	export let transacitons: {
+	export let transactions: {
 		id: number;
 		title: string;
 		type: string;
@@ -14,7 +14,7 @@
 <figure class="bg-neutral-800 rounded-xl p-4">
 	<figcaption class="text-xl">{title}</figcaption>
 	<ul class="mt-4 grid gap-x-4 grid-cols-[auto_1fr_1fr]">
-		{#each transacitons as transaction (transaction.id)}
+		{#each transactions as transaction (transaction.id)}
 			<li class="contents">
 				<span
 					class="py-2 px-4 font-price text-2xl text-right"
