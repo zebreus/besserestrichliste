@@ -14,3 +14,4 @@ result
 dev.sqlite
 dev.sqlite-journal
 nixos.qcow2
+*.generated.mjs
