@@ -1,9 +1,9 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
+import type { Mock } from 'vitest';
 
 interface PrismaMock {
 	user: {
 		findUniqueOrThrow: ReturnType<typeof vi.fn>;
-		findFirstOrThrow: ReturnType<typeof vi.fn>;
 		update: ReturnType<typeof vi.fn>;
 	};
 	transaction: {
@@ -18,7 +18,6 @@ vi.mock('$lib/prisma', () => {
 	prismaMock = {
 		user: {
 			findUniqueOrThrow: vi.fn(async () => ({ id: 1 })),
-			findFirstOrThrow: vi.fn(async () => ({ id: 2 })),
 			update: vi.fn(async () => ({}))
 		},
 		transaction: {
@@ -72,9 +71,11 @@ describe('user actions', () => {
 	});
 
 	it('creates transfer transaction with recipient and reason', async () => {
+		(prismaMock.user.findUniqueOrThrow as Mock).mockResolvedValueOnce({ id: 1 });
+		(prismaMock.user.findUniqueOrThrow as Mock).mockResolvedValueOnce({ id: 2 });
 		const fd = new FormData();
 		fd.set('amount', '25');
-		fd.set('recipient', 'Bob');
+		fd.set('recipient', '2');
 		fd.set('reason', 'Lunch');
 		const request = { formData: vi.fn(async () => fd) } as unknown as Request;
 

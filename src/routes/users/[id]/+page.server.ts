@@ -66,15 +66,14 @@ export const actions: Actions = {
 		const formData = await request.formData();
 		const initiatorId = Number(params.id);
 		const amount = formData.get('amount');
-		const recipientName = formData.get('recipient');
+		const recipientId = formData.get('recipient');
 		const reason = formData.get('reason');
 
 		const initiator = await prisma.user.findUniqueOrThrow({
 			where: { id: Number(initiatorId) }
 		});
-		// TODO: Figure out how to use ids in the frontend
-		const recipient = await prisma.user.findFirstOrThrow({
-			where: { name: '' + recipientName }
+		const recipient = await prisma.user.findUniqueOrThrow({
+			where: { id: Number(recipientId) }
 		});
 
 		await prisma.transaction.create({
