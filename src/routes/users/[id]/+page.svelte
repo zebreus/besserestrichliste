@@ -3,8 +3,60 @@
 	import PriceButton from '$lib/components/users/PriceButton.svelte';
 	import TransactionTable from '$lib/components/users/TransactionTable.svelte';
 	import type { PageServerData } from './$types';
+	import { enhance } from '$app/forms';
+	import { parseAmount } from '$lib/money';
 
 	export let data: PageServerData;
+
+	let transferError = '';
+	let transferSuccess = '';
+	let moneyError = '';
+	let moneySuccess = '';
+
+	function validateMoney({ formData, cancel }: { formData: FormData; cancel: () => void }) {
+		const amount = parseAmount(formData.get('amount'));
+		if (!amount) {
+			cancel();
+			moneyError = 'Amount required';
+			moneySuccess = '';
+		} else {
+			moneyError = '';
+			return async ({
+				update
+			}: {
+				update: (opts?: { reset?: boolean; invalidateAll?: boolean }) => Promise<void>;
+			}) => {
+				await update();
+				moneySuccess = 'Transaction successful';
+			};
+		}
+	}
+
+	function validateTransfer({ formData, cancel }: { formData: FormData; cancel: () => void }) {
+		const amount = parseAmount(formData.get('amount'));
+		const recipient = formData.get('recipient')?.toString().trim();
+		if (!amount) {
+			cancel();
+			transferError = 'Amount required';
+			transferSuccess = '';
+			return;
+		}
+		if (!recipient) {
+			cancel();
+			transferError = 'Recipient required';
+			transferSuccess = '';
+			return;
+		}
+		transferError = '';
+		return async ({
+			update
+		}: {
+			update: (opts?: { reset?: boolean; invalidateAll?: boolean }) => Promise<void>;
+		}) => {
+			await update();
+			transferSuccess = 'Transfer successful';
+		};
+	}
 </script>
 
 <div>
@@ -24,7 +76,7 @@
 		</Container>
 	</div>
 
-	<form method="POST" action="?/transfer">
+	<form method="POST" action="?/transfer" use:enhance={validateTransfer}>
 		<h2>Send money</h2>
 		<label>
 			Amount
@@ -44,6 +96,12 @@
 			</datalist>
 		</label>
 
+		{#if transferError}
+			<p class="text-red-500">{transferError}</p>
+		{/if}
+		{#if transferSuccess}
+			<p class="text-green-500">{transferSuccess}</p>
+		{/if}
 		<button>Send</button>
 	</form>
 
@@ -59,7 +117,13 @@
 
 	<div>
 		<h2>Deposit/Withdraw money</h2>
-		<form method="POST" action="?/withdraw">
+		{#if moneyError}
+			<p class="text-red-500">{moneyError}</p>
+		{/if}
+		{#if moneySuccess}
+			<p class="text-green-500">{moneySuccess}</p>
+		{/if}
+		<form method="POST" action="?/withdraw" use:enhance={validateMoney}>
 			<button name="amount" value="30">+0.30€</button>
 			<button name="amount" value="50">+0.50€</button>
 			<button name="amount" value="100">+1.00€</button>
@@ -68,7 +132,7 @@
 			<button name="amount" value="250">+2.50€</button>
 		</form>
 
-		<form method="POST">
+		<form method="POST" use:enhance={validateMoney}>
 			<label>
 				Amount
 				<input name="amount" type="number" />
@@ -77,7 +141,7 @@
 			<button formaction="?/withdraw">Withdraw</button>
 		</form>
 
-		<form method="POST" action="?/deposit">
+		<form method="POST" action="?/deposit" use:enhance={validateMoney}>
 			<button name="amount" value="50">+0.50€</button>
 			<button name="amount" value="100">+1€</button>
 			<button name="amount" value="200">+2€</button>
@@ -89,7 +153,12 @@
 
 	<main>
 		<Container class="grid grid-cols-3 mt-4 gap-4">
-			<form method="POST" action="?/deposit" class="grid grid-cols-3 gap-2">
+			<form
+				method="POST"
+				action="?/deposit"
+				class="grid grid-cols-3 gap-2"
+				use:enhance={validateMoney}
+			>
 				<PriceButton amount={30} />
 				<PriceButton amount={50} />
 				<PriceButton amount={100} />
@@ -97,7 +166,11 @@
 				<PriceButton amount={150} />
 				<PriceButton amount={250} />
 			</form>
-			<form method="POST" class="bg-neutral-800 p-4 gap-4 flex flex-col justify-between">
+			<form
+				method="POST"
+				class="bg-neutral-800 p-4 gap-4 flex flex-col justify-between"
+				use:enhance={validateMoney}
+			>
 				<label class="flex flex-col justify-center items-center gap-4">
 					<span class="font-bold text-xl">Amount</span>
 					<input
@@ -117,7 +190,12 @@
 					>
 				</div>
 			</form>
-			<form method="POST" action="?/withdraw" class="grid grid-cols-3 gap-2">
+			<form
+				method="POST"
+				action="?/withdraw"
+				class="grid grid-cols-3 gap-2"
+				use:enhance={validateMoney}
+			>
 				<PriceButton amount={30} type="withdraw" />
 				<PriceButton amount={50} type="withdraw" />
 				<PriceButton amount={100} type="withdraw" />

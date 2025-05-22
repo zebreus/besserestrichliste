@@ -2,9 +2,21 @@
 	import Container from '$lib/components/Container.svelte';
 	import UserCard from '$lib/components/UserCard.svelte';
 	import type { PageServerData } from './$types';
+	import { enhance } from '$app/forms';
 	import '@fontsource/atkinson-hyperlegible';
 
 	export let data: PageServerData;
+	let createError = '';
+
+	function validateCreateUser({ formData, cancel }: { formData: FormData; cancel: () => void }) {
+		const name = formData.get('name')?.toString().trim();
+		if (!name) {
+			cancel();
+			createError = 'Name is required';
+		} else {
+			createError = '';
+		}
+	}
 </script>
 
 <svelte:head>
@@ -23,11 +35,14 @@
 			{/each}
 		</ul>
 	</Container>
-	<form method="POST" action="?/createUser">
+	<form method="POST" action="?/createUser" use:enhance={validateCreateUser}>
 		<label>
 			Username
 			<input name="name" type="text" />
 		</label>
+		{#if createError}
+			<p class="text-red-500">{createError}</p>
+		{/if}
 		<button type="submit">Create User</button>
 	</form>
 </section>
