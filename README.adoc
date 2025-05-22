@@ -7,7 +7,7 @@
 // HOST:: The host of the server. Default is `localhost`. 
 // PORT:: The port of the server. Default is `3000`.
 // ORIGIN:: The origin of the server. Default is `http://localhost:3000`.
-// DATABASE_FILE:: The path to the sqlite database file. Default is `/TODO/db.sqlite`.
+// DATABASE_URL:: Path to the SQLite database file. Default is `file:/var/lib/besserestrichliste/db.sqlite`.
 
 ## Hosting besserestrichliste
 
