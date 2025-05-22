@@ -1,5 +1,6 @@
 import prisma from '$lib/prisma';
 import type { PageServerLoad, Actions } from './$types';
+import { error } from '@sveltejs/kit';
 
 export const load: PageServerLoad = async ({ params: { id } }) => {
 	const user = await prisma.user.findUnique({
@@ -7,8 +8,7 @@ export const load: PageServerLoad = async ({ params: { id } }) => {
 		include: { initiatorIn: true, recipientIn: true }
 	});
 	if (!user) {
-		//TODO: Thisis not the correct way to handle any error here
-		throw new Error('User not found');
+		throw error(404, 'User not found');
 	}
 
 	const otherUsers = await prisma.user.findMany({
