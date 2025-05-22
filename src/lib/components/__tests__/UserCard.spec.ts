@@ -1,6 +1,5 @@
 import { beforeAll, describe, it, expect } from 'vitest';
 import { compile } from 'svelte/compiler';
-import { JSDOM } from 'jsdom';
 import fs from 'fs';
 import path from 'path';
 
@@ -18,8 +17,8 @@ beforeAll(async () => {
 function render(props: Record<string, unknown>) {
 	const payload = { out: '' };
 	renderComponent(payload, props);
-	const dom = new JSDOM(payload.out);
-	return dom.window.document;
+	const doc = new DOMParser().parseFromString(payload.out, 'text/html');
+	return doc;
 }
 
 describe('UserCard', () => {

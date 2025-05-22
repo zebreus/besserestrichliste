@@ -1,6 +1,5 @@
 import { beforeAll, describe, expect, it } from 'vitest';
 import { compile } from 'svelte/compiler';
-import { JSDOM } from 'jsdom';
 import fs from 'fs';
 import path from 'path';
 
@@ -54,8 +53,8 @@ describe('TransactionTable', () => {
 		const payload = { out: '', head: { out: '', title: '' } };
 		renderComponent(payload, { transactions, title: 'Recent transactions' });
 
-		const dom = new JSDOM(payload.out);
-		const rows = dom.window.document.querySelectorAll('li');
+		const doc = new DOMParser().parseFromString(payload.out, 'text/html');
+		const rows = doc.querySelectorAll('li');
 		expect(rows.length).toBe(transactions.length);
 
 		rows.forEach((row, index) => {
