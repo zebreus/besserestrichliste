@@ -88,12 +88,12 @@
 		</label>
 		<label>
 			Recipient
-			<input list="recipients" name="recipient" id="recipient" />
-			<datalist id="recipients">
+			<select name="recipient" id="recipient">
+				<option value="" disabled selected hidden>Select recipient</option>
 				{#each data.otherUsers as user (user.id)}
-					<option value={user.name}> </option>
+					<option value={user.id}>{user.name}</option>
 				{/each}
-			</datalist>
+			</select>
 		</label>
 
 		{#if transferError}
