@@ -10,8 +10,8 @@ buildNpmPackage {
   # Explicitly set the nodejs version because we use it directly in makeWrapperArgs
   inherit nodejs;
 
-  npmDepsHash = "sha256-BLligcwNNSUhA8eZbqZxwR3LwLGHvT7IiAKeWiRP950=";
-  # npmDepsHash = "sha256-tRzY3HHeQrqE2PpKaQjjyxvL5BVFCUdjDuBeUXWdvzE=";
+  # npmDepsHash =   "sha256-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=";
+  npmDepsHash = "sha256-4rN0sI7GTOrAX13Q8+85XYyuCy1dlF1eB/iuqDStHq0=";
 
   PRISMA_SCHEMA_ENGINE_BINARY = "${prisma-engines}/bin/schema-engine";
   PRISMA_QUERY_ENGINE_BINARY = "${prisma-engines}/bin/query-engine";
