@@ -11,8 +11,7 @@ interface PrismaMock {
 	};
 }
 
-// eslint-disable-next-line no-var
-var prismaMock: PrismaMock;
+let prismaMock: PrismaMock;
 
 vi.mock('$lib/prisma', () => {
 	prismaMock = {

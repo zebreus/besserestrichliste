@@ -1,6 +1,5 @@
 <script>
 	import { page } from '$app/stores';
-	// eslint-disable-next-line svelte/valid-compile
 	const pathname = $page.url.pathname;
 </script>
 
