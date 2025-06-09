@@ -11,6 +11,7 @@
 		"test": "vitest --run",
 		"test:watch": "vitest",
 		"lint": "prettier --check . && eslint .",
+		"lint:single": "sh -c 'prettier --write \"$@\" || true && eslint \"$@\"' sh",
 		"format": "prettier --write .",
 		"migrate": "prisma migrate dev && prisma db seed -- --environment development",
 		"migrate:prod": "prisma migrate deploy && prisma db seed -- --environment production",
