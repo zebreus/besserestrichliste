@@ -93,6 +93,52 @@ Add this repo as a flake input and import the besserestrichliste nixos module in
 }
 ----
 
+## Development
+
+=== Prerequisites
+- Node.js (version specified in .nvmrc)
+- npm
+- SQLite (for local database)
+
+=== Setup
+1. Clone the repository
+2. Set up environment variables (create `.env` file):
+
+[source,bash]
+----
+echo "DATABASE_URL=file:./dev.db" > .env
+----
+
+3. Install dependencies and set up database:
+
+[source,bash]
+----
+npm install
+npx prisma generate
+npx prisma migrate dev --name init
+----
+
+=== Running the application
+Start the development server:
+
+[source,bash]
+----
+npm run dev
+----
+
+=== Testing
+Run the test suite:
+
+[source,bash]
+----
+npm run test
+----
+
+=== Useful commands
+- `npx prisma studio`: Open Prisma Studio to inspect the database
+- `npx prisma migrate reset`: Reset the database and re-run migrations
+- `npm run check`: Run type checking and linting
+
 ## Updating dependencies
 
 We are using prisma-engines from nixpkgs, so if you update the prisma version, you also need to make sure that we get the right prisma-engines version. For now prisma is pinned to `6.7.0` in package.json.
