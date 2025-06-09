@@ -20,9 +20,10 @@
 					class="py-2 px-4 font-price text-2xl text-right"
 					class:bg-green-950={transaction.amount > 0}
 					class:bg-red-950={transaction.amount < 0}
-					>{new Intl.NumberFormat(undefined, { style: 'currency', currency: 'EUR' }).format(
-						transaction.amount / 100
-					)}</span
+					>{new Intl.NumberFormat(undefined, {
+						style: 'currency',
+						currency: 'EUR'
+					}).format(transaction.amount / 100)}</span
 				>
 				<span class="self-center">{transaction.processedAt.toDateString()}</span>
 				<span class="self-center">From {transaction.initiatorId}</span>

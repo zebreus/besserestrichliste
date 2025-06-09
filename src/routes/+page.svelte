@@ -27,7 +27,9 @@
 <section>
 	<Container>
 		<h1 class="text-2xl font-bold mb-4">Nutzerübersicht</h1>
-		<ul class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
+		<ul
+			class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4"
+		>
 			{#each data.users as user (user.id)}
 				<li class="bg-neutral-800 border-gray-700 border-1">
 					<UserCard {user} />

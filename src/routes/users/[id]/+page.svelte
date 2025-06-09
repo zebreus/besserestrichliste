@@ -69,9 +69,10 @@
 				class:bg-green-950={data.user.balance >= 0}
 				class:bg-red-950={data.user.balance < 0}
 			>
-				Balance: {new Intl.NumberFormat(undefined, { style: 'currency', currency: 'EUR' }).format(
-					data.user.balance / 100
-				)}
+				Balance: {new Intl.NumberFormat(undefined, {
+					style: 'currency',
+					currency: 'EUR'
+				}).format(data.user.balance / 100)}
 			</span>
 		</Container>
 	</div>

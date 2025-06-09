@@ -21,7 +21,9 @@ const cases: Case[] = [
 describe('PriceButton', () => {
 	for (const c of cases) {
 		it(`renders ${c.type} ${c.amount}`, () => {
-			const { getByRole } = render(PriceButton, { props: { amount: c.amount, type: c.type } });
+			const { getByRole } = render(PriceButton, {
+				props: { amount: c.amount, type: c.type }
+			});
 			const button = getByRole('button') as HTMLButtonElement;
 			expect(button.className).toContain(c.bg);
 			if (c.textClass) {
