@@ -17,7 +17,7 @@ vi.mock('@sveltejs/kit', () => ({
 }));
 
 import prisma from '$lib/prisma';
-import type { RequestEvent } from '@sveltejs/kit';
+import type { RequestEvent } from '../$types';
 import { actions } from '../+page.server';
 
 describe('createUser action', () => {

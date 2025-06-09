@@ -5,7 +5,6 @@
 	"printWidth": 100,
 	"tabWidth": 4,
 	"svelteStrictMode": false,
-	"svelteBracketNewLine": false,
 	"plugins": ["prettier-plugin-svelte"],
 	"overrides": [
 		{

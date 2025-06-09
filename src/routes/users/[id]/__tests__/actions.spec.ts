@@ -27,6 +27,7 @@ vi.mock('$lib/prisma', () => {
 });
 
 import { actions } from '../+page.server';
+import type { RequestEvent } from '../$types';
 
 beforeEach(() => {
 	vi.clearAllMocks();
@@ -38,7 +39,7 @@ describe('user actions', () => {
 		fd.set('amount', '100');
 		const request = { formData: vi.fn(async () => fd) } as unknown as Request;
 
-		await actions.deposit({ request, params: { id: '1' } });
+		await actions.deposit({ request, params: { id: '1' } } as RequestEvent);
 
 		expect(prismaMock.transaction.create).toHaveBeenCalledWith({
 			data: {
@@ -56,7 +57,7 @@ describe('user actions', () => {
 		fd.set('amount', '50');
 		const request = { formData: vi.fn(async () => fd) } as unknown as Request;
 
-		await actions.withdraw({ request, params: { id: '1' } });
+		await actions.withdraw({ request, params: { id: '1' } } as RequestEvent);
 
 		expect(prismaMock.transaction.create).toHaveBeenCalledWith({
 			data: {
@@ -78,7 +79,7 @@ describe('user actions', () => {
 		fd.set('reason', 'Lunch');
 		const request = { formData: vi.fn(async () => fd) } as unknown as Request;
 
-		await actions.transfer({ request, params: { id: '1' } });
+		await actions.transfer({ request, params: { id: '1' } } as RequestEvent);
 
 		expect(prismaMock.transaction.create).toHaveBeenCalledWith({
 			data: {
@@ -96,7 +97,7 @@ describe('user actions', () => {
 		fd.set('name', 'Alice');
 		const request = { formData: vi.fn(async () => fd) } as unknown as Request;
 
-		await actions.edit({ request, params: { id: '1' } });
+		await actions.edit({ request, params: { id: '1' } } as RequestEvent);
 
 		expect(prismaMock.user.update).toHaveBeenCalledWith({
 			where: { id: 1 },
