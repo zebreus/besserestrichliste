@@ -45,10 +45,10 @@
 	},
 	"dependencies": {
 		"@fontsource/atkinson-hyperlegible": "^5.0.20",
-		"@prisma/client": "^5.13.0",
+		"@prisma/client": "=6.7.0",
 		"@unocss/extractor-svelte": "^0.60.2",
 		"@unocss/reset": "^0.60.2",
-		"prisma": "^5.13.0",
+		"prisma": "=6.7.0",
 		"tsx": "^4.10.1"
 	},
 	"overrides": {

@@ -92,3 +92,7 @@ Add this repo as a flake input and import the besserestrichliste nixos module in
   };
 }
 ----
+
+## Updating dependencies
+
+We are using prisma-engines from nixpkgs, so if you update the prisma version, you also need to make sure that we get the right prisma-engines version. For now prisma is pinned to `6.7.0` in package.json.
