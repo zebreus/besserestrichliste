@@ -11,7 +11,7 @@ interface PrismaMock {
 	};
 }
 
-let prismaMock: PrismaMock;
+var prismaMock: PrismaMock;
 
 vi.mock('$lib/prisma', () => {
 	prismaMock = {
