@@ -16,3 +16,4 @@ dev.sqlite-journal
 nixos.qcow2
 *.generated.mjs
 .aider*
+prisma/dev.db
