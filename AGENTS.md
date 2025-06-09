@@ -15,13 +15,49 @@
 After editing any file, make sure it is formatted correctly (using prettier). For example, if you edited `src/agents/agent.ts`, run:
 
 ```bash
-prettier --write src/agents/agent.ts
+npm run format src/agents/agent.ts
 ```
+# Or for multiple files:
+npm run format src/**/*.ts
 
 ## Committing changes
 
 Before committing your changes, make sure the types are correct, the code is formatted, there are no linter errors, and all tests pass. You can do this by running the following commands
 
 ```bash
-#TODO: Add individual commands to check types, format code, lint, and run tests. Also clarify that they should be run individually.
+## Pre-Commit Checks
+
+Before committing, run these commands individually:
+
+1. Type checking:
+```bash
+npm run check
+```
+
+2. Code formatting:
+```bash
+npm run format
+```
+
+3. Linting:
+```bash
+npm run lint
+```
+
+4. Running tests:
+```bash
+npm test
+```
+
+5. Database migrations (if needed):
+```bash
+npm run migrate
+```
+
+These commands match the scripts defined in your package.json and ensure:
+- Type safety (TypeScript validation)
+- Consistent code style (Prettier)
+- Code quality (ESLint)
+- Functionality (Vitest tests)
+- Database schema is up-to-date
 ```
