@@ -8,7 +8,7 @@ let renderComponent: (payload: { out: string }, props: Record<string, unknown>) 
 beforeAll(async () => {
 	const srcPath = path.resolve(__dirname, '../UserCard.svelte');
 	const source = fs.readFileSync(srcPath, 'utf8');
-	const { js } = compile(source, { generate: 'ssr', filename: srcPath });
+	const { js } = compile(source, { generate: 'server', filename: srcPath });
 	const tmpFile = path.resolve(__dirname, 'UserCard.generated.mjs');
 	fs.writeFileSync(tmpFile, js.code);
 	renderComponent = (await import(tmpFile)).default as typeof renderComponent;

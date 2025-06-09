@@ -21,7 +21,7 @@ let renderComponent: (
 beforeAll(async () => {
 	const srcPath = path.resolve(__dirname, '../TransactionTable.svelte');
 	const source = fs.readFileSync(srcPath, 'utf8');
-	const { js } = compile(source, { generate: 'ssr', filename: srcPath });
+	const { js } = compile(source, { generate: 'server', filename: srcPath });
 	const tmpFile = path.resolve(__dirname, 'TransactionTable.generated.mjs');
 	fs.writeFileSync(tmpFile, js.code);
 	renderComponent = (await import(tmpFile)).default as typeof renderComponent;
