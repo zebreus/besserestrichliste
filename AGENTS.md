@@ -44,14 +44,18 @@ prettier --write src/FILE.ts
 
 ## Verify your changes are okay
 
-Before committing any changes, run these commands individually:
+Before committing changes ALWAYS run `bash test.sh` and fix all errors that are reported. This will execute the following commands:
 
-1. Type-check (and svelte-check) with `npm run check`
-2. Check formatting with `npm run format`
-3. Lint with `npm run lint` or `eslint .`
-4. Run tests with `npm run test` or `vitest --run`
+```bash
+prettier --check .
+eslint .
+prisma generate
+svelte-kit sync
+svelte-check
+vitest --run
+```
 
-These commands match the scripts defined in your package.json and ensure:
+These commands are defined in test.sh and ensure:
 
 - Type safety (TypeScript validation)
 - Svelte component validation (svelte-check)

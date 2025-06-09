@@ -10,6 +10,7 @@
 		"check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
 		"test": "vitest --run",
 		"test:watch": "vitest",
+		"test:all": "bash test.sh",
 		"lint": "prettier --check . && eslint .",
 		"lint:single": "sh -c 'prettier --write \"$@\" || true && eslint \"$@\"' sh",
 		"format": "prettier --write .",
