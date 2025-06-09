@@ -24,7 +24,6 @@ npm run format src/**/*.ts
 
 Before committing your changes, make sure the types are correct, the code is formatted, there are no linter errors, and all tests pass. You can do this by running the following commands
 
-```bash
 ## Pre-Commit Checks
 
 Before committing, run these commands individually:
@@ -60,4 +59,3 @@ These commands match the scripts defined in your package.json and ensure:
 - Code quality (ESLint)
 - Functionality (Vitest tests)
 - Database schema is up-to-date
-```
