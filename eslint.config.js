@@ -12,7 +12,7 @@ export default [
 			'.DS_Store',
 			'node_modules',
 			'/build',
-			'/.svelte-kit',
+			'**/.svelte-kit/**',
 			'/package',
 			'.env',
 			'.env.*',
