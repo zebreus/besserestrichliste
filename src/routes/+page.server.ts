@@ -3,12 +3,18 @@ import type { PageServerLoad, Actions } from './$types';
 import { fail, redirect } from '@sveltejs/kit';
 
 export const load: PageServerLoad = async () => {
-	const response = await prisma.user.findMany({
-		where: {},
+	const allUsers = await prisma.user.findMany({
+		where: { internal: false },
 		include: {}
 	});
 
-	return { users: response };
+	const twoWeeksAgo = new Date();
+	twoWeeksAgo.setDate(twoWeeksAgo.getDate() - 14);
+
+	const activeUsers = allUsers.filter((user) => new Date(user.lastActive) >= twoWeeksAgo);
+	const inactiveUsers = allUsers.filter((user) => new Date(user.lastActive) < twoWeeksAgo);
+
+	return { activeUsers, inactiveUsers };
 };
 
 export const actions: Actions = {
