@@ -5,7 +5,10 @@ import { error } from '@sveltejs/kit';
 export const load: PageServerLoad = async ({ params: { id } }) => {
 	const user = await prisma.user.findUnique({
 		where: { id: Number(id) },
-		include: { initiatorIn: true, recipientIn: true }
+		include: {
+			initiatorIn: { include: { reversedBy: true, reverses: true } },
+			recipientIn: { include: { reversedBy: true, reverses: true } }
+		}
 	});
 	if (!user) {
 		throw error(404, 'User not found');
@@ -95,5 +98,40 @@ export const actions: Actions = {
 			where: { id: Number(userId) },
 			data: { name: '' + name }
 		});
+	},
+	undo: async ({ request }) => {
+		const formData = await request.formData();
+		const transactionId = Number(formData.get('transactionId'));
+
+		// Get the original transaction
+		const originalTransaction = await prisma.transaction.findUniqueOrThrow({
+			where: { id: transactionId },
+			include: { reversedBy: true }
+		});
+
+		// Check if already reversed
+		if (originalTransaction.reversedBy) {
+			return { error: 'Transaction already reversed' };
+		}
+
+		// Check if transaction is within 5 minutes
+		const fiveMinutesAgo = new Date(Date.now() - 5 * 60 * 1000);
+		if (new Date(originalTransaction.processedAt) < fiveMinutesAgo) {
+			return { error: 'Transaction is too old to undo' };
+		}
+
+		// Create reversal transaction
+		await prisma.transaction.create({
+			data: {
+				amount: -originalTransaction.amount,
+				title: originalTransaction.title,
+				type: originalTransaction.type,
+				initiatorId: originalTransaction.initiatorId,
+				recipientId: originalTransaction.recipientId,
+				reversesId: originalTransaction.id
+			}
+		});
+
+		return { success: true };
 	}
 };

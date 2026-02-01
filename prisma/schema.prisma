@@ -11,21 +11,26 @@ datasource db {
 }
 
 model Transaction {
-  id          Int      @id @default(autoincrement())
+  id          Int          @id @default(autoincrement())
   // Short description of the transaction. Empty string if there is no description. No longer than XXX characters.
   title       String
   // Freetext describing the type of this transaction. Should be mostly enum-like values. like "charge", "sale", "transfer" or something like that
   type        String
   // When the transaction was processed
-  processedAt DateTime @default(now())
+  processedAt DateTime     @default(now())
   // The Amount of cents transferred from the initiator to the recipient. Negative values reflect money transferred from the recipient to the initiator.
   amount      Int
   // The user that is reponsible for triggering this transaction
-  initiator   User?    @relation(name: "InitiatorTransactions", fields: [initiatorId], references: [id])
+  initiator   User?        @relation(name: "InitiatorTransactions", fields: [initiatorId], references: [id])
   initiatorId Int?
   // The other involved user
-  recipient   User?    @relation(name: "RecipientTransactions", fields: [recipientId], references: [id])
+  recipient   User?        @relation(name: "RecipientTransactions", fields: [recipientId], references: [id])
   recipientId Int?
+  // The transaction that this transaction reverses (if this is a reversal transaction)
+  reverses    Transaction? @relation(name: "TransactionReversal", fields: [reversesId], references: [id])
+  reversesId  Int?         @unique
+  // The transaction that reverses this transaction (if this transaction was undone)
+  reversedBy  Transaction? @relation(name: "TransactionReversal")
 }
 
 model User {

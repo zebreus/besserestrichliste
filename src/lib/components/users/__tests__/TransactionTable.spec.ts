@@ -11,6 +11,8 @@ type Transaction = {
 	amount: number;
 	initiatorId: number | null;
 	recipientId: number | null;
+	reversedBy: { id: number } | null;
+	reverses: { id: number } | null;
 };
 
 let renderComponent: (
@@ -37,7 +39,9 @@ describe('TransactionTable', () => {
 				processedAt: new Date('2024-01-10T00:00:00Z'),
 				amount: 2500,
 				initiatorId: 1,
-				recipientId: null
+				recipientId: null,
+				reversedBy: null,
+				reverses: null
 			},
 			{
 				id: 2,
@@ -46,7 +50,9 @@ describe('TransactionTable', () => {
 				processedAt: new Date('2024-01-11T00:00:00Z'),
 				amount: -1200,
 				initiatorId: null,
-				recipientId: 2
+				recipientId: 2,
+				reversedBy: null,
+				reverses: null
 			}
 		];
 

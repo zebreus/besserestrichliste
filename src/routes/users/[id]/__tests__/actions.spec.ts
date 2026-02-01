@@ -8,6 +8,7 @@ interface PrismaMock {
 	};
 	transaction: {
 		create: ReturnType<typeof vi.fn>;
+		findUniqueOrThrow: ReturnType<typeof vi.fn>;
 	};
 }
 
@@ -20,7 +21,17 @@ vi.mock('$lib/prisma', () => {
 			update: vi.fn(async () => ({}))
 		},
 		transaction: {
-			create: vi.fn(async () => ({}))
+			create: vi.fn(async () => ({})),
+			findUniqueOrThrow: vi.fn(async () => ({
+				id: 1,
+				amount: 100,
+				title: 'Test',
+				type: 'transfer',
+				initiatorId: 1,
+				recipientId: 2,
+				processedAt: new Date(),
+				reversedBy: null
+			}))
 		}
 	};
 	return { default: prismaMock };
@@ -103,5 +114,86 @@ describe('user actions', () => {
 			where: { id: 1 },
 			data: { name: 'Alice' }
 		});
+	});
+
+	it('creates reversal transaction when undoing', async () => {
+		const recentDate = new Date(Date.now() - 2 * 60 * 1000); // 2 minutes ago
+		(prismaMock.transaction.findUniqueOrThrow as Mock).mockResolvedValueOnce({
+			id: 5,
+			amount: 100,
+			title: 'Coffee',
+			type: 'withdraw',
+			initiatorId: 1,
+			recipientId: 0,
+			processedAt: recentDate,
+			reversedBy: null
+		});
+
+		const fd = new FormData();
+		fd.set('transactionId', '5');
+		const request = { formData: vi.fn(async () => fd) } as unknown as Request;
+
+		await actions.undo({ request, params: { id: '1' } } as RequestEvent);
+
+		expect(prismaMock.transaction.findUniqueOrThrow).toHaveBeenCalledWith({
+			where: { id: 5 },
+			include: { reversedBy: true }
+		});
+
+		expect(prismaMock.transaction.create).toHaveBeenCalledWith({
+			data: {
+				amount: -100,
+				title: 'Coffee',
+				type: 'withdraw',
+				initiatorId: 1,
+				recipientId: 0,
+				reversesId: 5
+			}
+		});
+	});
+
+	it('rejects undo for transactions older than 5 minutes', async () => {
+		const oldDate = new Date(Date.now() - 6 * 60 * 1000); // 6 minutes ago
+		(prismaMock.transaction.findUniqueOrThrow as Mock).mockResolvedValueOnce({
+			id: 5,
+			amount: 100,
+			title: 'Coffee',
+			type: 'withdraw',
+			initiatorId: 1,
+			recipientId: 0,
+			processedAt: oldDate,
+			reversedBy: null
+		});
+
+		const fd = new FormData();
+		fd.set('transactionId', '5');
+		const request = { formData: vi.fn(async () => fd) } as unknown as Request;
+
+		const result = await actions.undo({ request, params: { id: '1' } } as RequestEvent);
+
+		expect(result).toEqual({ error: 'Transaction is too old to undo' });
+		expect(prismaMock.transaction.create).not.toHaveBeenCalled();
+	});
+
+	it('rejects undo for already reversed transactions', async () => {
+		(prismaMock.transaction.findUniqueOrThrow as Mock).mockResolvedValueOnce({
+			id: 5,
+			amount: 100,
+			title: 'Coffee',
+			type: 'withdraw',
+			initiatorId: 1,
+			recipientId: 0,
+			processedAt: new Date(),
+			reversedBy: { id: 6 }
+		});
+
+		const fd = new FormData();
+		fd.set('transactionId', '5');
+		const request = { formData: vi.fn(async () => fd) } as unknown as Request;
+
+		const result = await actions.undo({ request, params: { id: '1' } } as RequestEvent);
+
+		expect(result).toEqual({ error: 'Transaction already reversed' });
+		expect(prismaMock.transaction.create).not.toHaveBeenCalled();
 	});
 });
