@@ -18,14 +18,14 @@ model Transaction {
   type        String
   // When the transaction was processed
   processedAt DateTime     @default(now())
-  // The Amount of cents transferred from the initiator to the recipient. Negative values reflect money transferred from the recipient to the initiator.
+  // The amount of cents transferred from 'from' to 'to'. Always positive.
   amount      Int
-  // The user that is reponsible for triggering this transaction
-  initiator   User?        @relation(name: "InitiatorTransactions", fields: [initiatorId], references: [id])
-  initiatorId Int?
-  // The other involved user
-  recipient   User?        @relation(name: "RecipientTransactions", fields: [recipientId], references: [id])
-  recipientId Int?
+  // The user that money is leaving from
+  from        User?        @relation(name: "FromTransactions", fields: [fromId], references: [id])
+  fromId      Int?
+  // The user that money is going to
+  to          User?        @relation(name: "ToTransactions", fields: [toId], references: [id])
+  toId        Int?
   // The transaction that this transaction reverses (if this is a reversal transaction)
   reverses    Transaction? @relation(name: "TransactionReversal", fields: [reversesId], references: [id])
   reversesId  Int?         @unique
@@ -34,18 +34,18 @@ model Transaction {
 }
 
 model User {
-  id          Int           @id @default(autoincrement())
+  id         Int           @id @default(autoincrement())
   // Name of the user for display purposes
-  name        String
+  name       String
   // Whether this user is internal. Internal users will be hidden from the overview
-  internal    Boolean       @default(false)
+  internal   Boolean       @default(false)
   // The balance of the user in cents. Should get automatically updated when transactions are processed
-  balance     Int           @default(0)
-  createdAt   DateTime      @default(now())
+  balance    Int           @default(0)
+  createdAt  DateTime      @default(now())
   // The date when the user was last active
-  lastActive  DateTime      @default(now())
-  // The transactions that this user initiated
-  initiatorIn Transaction[] @relation(name: "InitiatorTransactions")
-  // The transactions that this user received
-  recipientIn Transaction[] @relation(name: "RecipientTransactions")
+  lastActive DateTime      @default(now())
+  // The transactions where this user is sending money
+  fromIn     Transaction[] @relation(name: "FromTransactions")
+  // The transactions where this user is receiving money
+  toIn       Transaction[] @relation(name: "ToTransactions")
 }

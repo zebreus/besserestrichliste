@@ -80,11 +80,11 @@ async function main() {
 
 	await prisma.transaction.create({
 		data: {
-			amount: -1000,
+			amount: 1000,
 			title: '',
 			type: 'cash',
-			initiatorId: zebreus.id,
-			recipientId: matekasse.id
+			fromId: matekasse.id,
+			toId: zebreus.id
 		}
 	});
 	await prisma.transaction.create({
@@ -92,8 +92,8 @@ async function main() {
 			amount: 130,
 			title: '',
 			type: 'sale',
-			initiatorId: zebreus.id,
-			recipientId: matekasse.id
+			fromId: zebreus.id,
+			toId: matekasse.id
 		}
 	});
 	await prisma.transaction.create({
@@ -101,8 +101,8 @@ async function main() {
 			amount: 130,
 			title: '',
 			type: 'sale',
-			initiatorId: zebreus.id,
-			recipientId: matekasse.id
+			fromId: zebreus.id,
+			toId: matekasse.id
 		}
 	});
 	await prisma.transaction.create({
@@ -110,17 +110,17 @@ async function main() {
 			amount: 50,
 			title: '',
 			type: 'sale',
-			initiatorId: hxr.id,
-			recipientId: matekasse.id
+			fromId: hxr.id,
+			toId: matekasse.id
 		}
 	});
 	await prisma.transaction.create({
 		data: {
-			amount: -2000,
+			amount: 2000,
 			title: '',
 			type: 'cash',
-			initiatorId: avocadoom.id,
-			recipientId: matekasse.id
+			fromId: matekasse.id,
+			toId: avocadoom.id
 		}
 	});
 	await prisma.transaction.create({
@@ -128,8 +128,8 @@ async function main() {
 			amount: 450,
 			title: 'Pizza',
 			type: 'cash',
-			initiatorId: avocadoom.id,
-			recipientId: matekasse.id
+			fromId: avocadoom.id,
+			toId: matekasse.id
 		}
 	});
 	await prisma.transaction.create({
@@ -137,8 +137,8 @@ async function main() {
 			amount: 50,
 			title: '',
 			type: 'transfer',
-			initiatorId: hexa.id,
-			recipientId: avocadoom.id
+			fromId: hexa.id,
+			toId: avocadoom.id
 		}
 	});
 	await prisma.transaction.create({
@@ -146,8 +146,8 @@ async function main() {
 			amount: 50,
 			title: '',
 			type: 'transfer',
-			initiatorId: andi.id,
-			recipientId: avocadoom.id
+			fromId: andi.id,
+			toId: avocadoom.id
 		}
 	});
 	await prisma.transaction.create({
@@ -155,8 +155,8 @@ async function main() {
 			amount: 50,
 			title: '',
 			type: 'transfer',
-			initiatorId: fleaz.id,
-			recipientId: avocadoom.id
+			fromId: fleaz.id,
+			toId: avocadoom.id
 		}
 	});
 	await prisma.transaction.create({
@@ -164,8 +164,8 @@ async function main() {
 			amount: 50,
 			title: '',
 			type: 'transfer',
-			initiatorId: braack.id,
-			recipientId: avocadoom.id
+			fromId: braack.id,
+			toId: avocadoom.id
 		}
 	});
 	console.log(`Seeding finished.`);

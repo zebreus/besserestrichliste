@@ -9,15 +9,15 @@ type Transaction = {
 	type: string;
 	processedAt: Date;
 	amount: number;
-	initiatorId: number | null;
-	recipientId: number | null;
+	fromId: number | null;
+	toId: number | null;
 	reversedBy: { id: number } | null;
 	reverses: { id: number } | null;
 };
 
 let renderComponent: (
 	payload: { out: string; head: { out: string; title: string } },
-	props: { transactions: Transaction[]; title: string }
+	props: { transactions: Transaction[]; title: string; userId: number }
 ) => void;
 
 beforeAll(async () => {
@@ -38,8 +38,8 @@ describe('TransactionTable', () => {
 				type: 'credit',
 				processedAt: new Date('2024-01-10T00:00:00Z'),
 				amount: 2500,
-				initiatorId: 1,
-				recipientId: null,
+				fromId: 2,
+				toId: 1,
 				reversedBy: null,
 				reverses: null
 			},
@@ -48,16 +48,16 @@ describe('TransactionTable', () => {
 				title: 'Groceries',
 				type: 'debit',
 				processedAt: new Date('2024-01-11T00:00:00Z'),
-				amount: -1200,
-				initiatorId: null,
-				recipientId: 2,
+				amount: 1200,
+				fromId: 1,
+				toId: 2,
 				reversedBy: null,
 				reverses: null
 			}
 		];
 
 		const payload = { out: '', head: { out: '', title: '' } };
-		renderComponent(payload, { transactions, title: 'Recent transactions' });
+		renderComponent(payload, { transactions, title: 'Recent transactions', userId: 1 });
 
 		const doc = new DOMParser().parseFromString(payload.out, 'text/html');
 		const rows = doc.querySelectorAll('li');
@@ -73,11 +73,14 @@ describe('TransactionTable', () => {
 				currency: 'EUR'
 			}).format(transactions[index].amount / 100);
 
-			expect(amountSpan.textContent).toBe(formatted);
+			// Check if amount text includes the formatted value (with +/- prefix)
+			expect(amountSpan.textContent).toContain(formatted);
 
-			if (transactions[index].amount > 0) {
+			// First transaction: from=2, to=1, userId=1 -> incoming (green)
+			// Second transaction: from=1, to=2, userId=1 -> outgoing (red)
+			if (index === 0) {
 				expect(amountSpan.classList.contains('bg-green-950')).toBe(true);
-			} else if (transactions[index].amount < 0) {
+			} else if (index === 1) {
 				expect(amountSpan.classList.contains('bg-red-950')).toBe(true);
 			}
 

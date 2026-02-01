@@ -7,12 +7,13 @@
 		type: string;
 		processedAt: Date;
 		amount: number;
-		initiatorId: number | null;
-		recipientId: number | null;
+		fromId: number | null;
+		toId: number | null;
 		reversedBy: { id: number } | null;
 		reverses: { id: number } | null;
 	}[];
 	export let title: string;
+	export let userId: number;
 
 	// Filter out reversal transactions and merge them with their original
 	$: displayTransactions = transactions
@@ -20,7 +21,11 @@
 		.map((t) => ({
 			...t,
 			isReverted: !!t.reversedBy,
-			canUndo: !t.reversedBy && Date.now() - new Date(t.processedAt).getTime() < 5 * 60 * 1000
+			canUndo:
+				!t.reversedBy && Date.now() - new Date(t.processedAt).getTime() < 5 * 60 * 1000,
+			// Determine if this is money leaving (-) or arriving (+) for this user
+			isIncoming: t.toId === userId,
+			isOutgoing: t.fromId === userId
 		}));
 </script>
 
@@ -31,12 +36,12 @@
 			<li class="contents">
 				<span
 					class="py-2 px-4 font-price text-2xl text-right"
-					class:bg-green-950={transaction.amount > 0 && !transaction.isReverted}
-					class:bg-red-950={transaction.amount < 0 && !transaction.isReverted}
+					class:bg-green-950={transaction.isIncoming && !transaction.isReverted}
+					class:bg-red-950={transaction.isOutgoing && !transaction.isReverted}
 					class:bg-neutral-700={transaction.isReverted}
 					class:line-through={transaction.isReverted}
 					class:opacity-60={transaction.isReverted}
-					>{new Intl.NumberFormat(undefined, {
+					>{transaction.isOutgoing ? '-' : '+'}{new Intl.NumberFormat(undefined, {
 						style: 'currency',
 						currency: 'EUR'
 					}).format(transaction.amount / 100)}</span
@@ -44,9 +49,15 @@
 				<span class="self-center" class:opacity-60={transaction.isReverted}
 					>{transaction.processedAt.toDateString()}</span
 				>
-				<span class="self-center" class:opacity-60={transaction.isReverted}
-					>From {transaction.initiatorId}</span
-				>
+				<span class="self-center" class:opacity-60={transaction.isReverted}>
+					{#if transaction.isOutgoing}
+						To {transaction.toId}
+					{:else if transaction.isIncoming}
+						From {transaction.fromId}
+					{:else}
+						{transaction.fromId} → {transaction.toId}
+					{/if}
+				</span>
 				<span class="self-center">
 					{#if transaction.isReverted}
 						<span class="text-neutral-400 text-sm">Reverted</span>

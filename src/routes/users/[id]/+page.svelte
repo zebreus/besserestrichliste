@@ -206,8 +206,16 @@
 			</form>
 		</Container>
 		<Container class="grid lg:grid-cols-2 my-4	gap-4">
-			<TransactionTable transactions={data.user.initiatorIn} title="Initiated transactions" />
-			<TransactionTable transactions={data.user.recipientIn} title="Received transactions" />
+			<TransactionTable
+				transactions={data.user.fromIn}
+				title="Money sent"
+				userId={data.user.id}
+			/>
+			<TransactionTable
+				transactions={data.user.toIn}
+				title="Money received"
+				userId={data.user.id}
+			/>
 		</Container>
 	</main>
 </div>

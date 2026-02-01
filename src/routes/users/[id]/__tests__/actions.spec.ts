@@ -27,8 +27,8 @@ vi.mock('$lib/prisma', () => {
 				amount: 100,
 				title: 'Test',
 				type: 'transfer',
-				initiatorId: 1,
-				recipientId: 2,
+				fromId: 1,
+				toId: 2,
 				processedAt: new Date(),
 				reversedBy: null
 			}))
@@ -45,7 +45,7 @@ beforeEach(() => {
 });
 
 describe('user actions', () => {
-	it('creates deposit transaction with negative amount', async () => {
+	it('creates deposit transaction from system to user', async () => {
 		const fd = new FormData();
 		fd.set('amount', '100');
 		const request = { formData: vi.fn(async () => fd) } as unknown as Request;
@@ -54,16 +54,16 @@ describe('user actions', () => {
 
 		expect(prismaMock.transaction.create).toHaveBeenCalledWith({
 			data: {
-				amount: -100,
+				amount: 100,
 				title: 'UI Transaction',
 				type: 'deposit',
-				recipient: { connect: { id: 0 } },
-				initiator: { connect: { id: 1 } }
+				from: { connect: { id: 0 } },
+				to: { connect: { id: 1 } }
 			}
 		});
 	});
 
-	it('creates withdraw transaction with positive amount', async () => {
+	it('creates withdraw transaction from user to system', async () => {
 		const fd = new FormData();
 		fd.set('amount', '50');
 		const request = { formData: vi.fn(async () => fd) } as unknown as Request;
@@ -74,14 +74,14 @@ describe('user actions', () => {
 			data: {
 				amount: 50,
 				title: 'UI Transaction',
-				type: 'transfer',
-				recipient: { connect: { id: 0 } },
-				initiator: { connect: { id: 1 } }
+				type: 'withdraw',
+				from: { connect: { id: 1 } },
+				to: { connect: { id: 0 } }
 			}
 		});
 	});
 
-	it('creates transfer transaction with recipient and reason', async () => {
+	it('creates transfer transaction from sender to recipient', async () => {
 		(prismaMock.user.findUniqueOrThrow as Mock).mockResolvedValueOnce({ id: 1 });
 		(prismaMock.user.findUniqueOrThrow as Mock).mockResolvedValueOnce({ id: 2 });
 		const fd = new FormData();
@@ -97,8 +97,8 @@ describe('user actions', () => {
 				amount: 25,
 				title: 'Lunch',
 				type: 'transfer',
-				recipient: { connect: { id: 2 } },
-				initiator: { connect: { id: 1 } }
+				from: { connect: { id: 1 } },
+				to: { connect: { id: 2 } }
 			}
 		});
 	});
@@ -116,15 +116,15 @@ describe('user actions', () => {
 		});
 	});
 
-	it('creates reversal transaction when undoing', async () => {
+	it('creates reversal transaction by swapping from/to', async () => {
 		const recentDate = new Date(Date.now() - 2 * 60 * 1000); // 2 minutes ago
 		(prismaMock.transaction.findUniqueOrThrow as Mock).mockResolvedValueOnce({
 			id: 5,
 			amount: 100,
 			title: 'Coffee',
 			type: 'withdraw',
-			initiatorId: 1,
-			recipientId: 0,
+			fromId: 1,
+			toId: 0,
 			processedAt: recentDate,
 			reversedBy: null
 		});
@@ -142,11 +142,11 @@ describe('user actions', () => {
 
 		expect(prismaMock.transaction.create).toHaveBeenCalledWith({
 			data: {
-				amount: -100,
+				amount: 100,
 				title: 'Coffee',
 				type: 'withdraw',
-				initiatorId: 1,
-				recipientId: 0,
+				fromId: 0,
+				toId: 1,
 				reversesId: 5
 			}
 		});
@@ -159,8 +159,8 @@ describe('user actions', () => {
 			amount: 100,
 			title: 'Coffee',
 			type: 'withdraw',
-			initiatorId: 1,
-			recipientId: 0,
+			fromId: 1,
+			toId: 0,
 			processedAt: oldDate,
 			reversedBy: null
 		});
@@ -181,8 +181,8 @@ describe('user actions', () => {
 			amount: 100,
 			title: 'Coffee',
 			type: 'withdraw',
-			initiatorId: 1,
-			recipientId: 0,
+			fromId: 1,
+			toId: 0,
 			processedAt: new Date(),
 			reversedBy: { id: 6 }
 		});
