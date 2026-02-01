@@ -20,7 +20,8 @@ export default [
 			'pnpm-lock.yaml',
 			'package-lock.json',
 			'yarn.lock',
-			'**/.husky/**'
+			'**/.husky/**',
+			'**/*.generated.mjs'
 		],
 		languageOptions: {
 			globals: {
